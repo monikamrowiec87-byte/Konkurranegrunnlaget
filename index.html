@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E39 Blørstad–Lyngdal · Konkurransegrunnlag</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16201f; --ink-soft:#3c4c4a; --muted:#6b7d7a;
+    --paper:#f4efe6; --paper-2:#ece5d8; --card:#fbf8f2;
+    --line:#d8cfbe; --line-soft:#e4ddcf;
+    --teal:#0f8a7e; --teal-deep:#0a5f57; --teal-wash:#dcefe9;
+    --coral:#e8623c; --coral-wash:#f7e1d8;
+    --gold:#b8841f;
+    --shadow:0 1px 0 rgba(22,32,31,.04),0 8px 28px -16px rgba(10,95,87,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Hanken Grotesk',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(circle at 12% -5%, rgba(15,138,126,.07), transparent 40%),
+      radial-gradient(circle at 95% 0%, rgba(232,98,60,.06), transparent 38%);
+    background-attachment:fixed;
+  }
+  ::selection{background:var(--teal);color:#fff}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(244,239,230,.86);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .head-inner{max-width:1280px;margin:0 auto;padding:18px 28px 14px}
+  .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .logo{
+    font-family:'Fraunces',serif;font-weight:600;font-size:13px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--teal-deep);
+    display:flex;align-items:center;gap:9px;
+  }
+  .logo .mark{
+    width:22px;height:22px;border:2px solid var(--teal);border-radius:6px;
+    display:grid;place-items:center;color:var(--coral);font-weight:800;font-size:13px;
+    font-family:'JetBrains Mono',monospace;transform:rotate(-4deg);
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:500;font-size:clamp(26px,4vw,40px);
+    line-height:1.04;letter-spacing:-.01em;margin-top:6px;color:var(--ink);
+  }
+  h1 em{font-style:italic;color:var(--teal-deep)}
+  .sub{color:var(--muted);font-size:14px;margin-top:6px;max-width:62ch}
+  .sub b{color:var(--ink-soft);font-weight:600}
+
+  /* ---------- SEARCH ---------- */
+  .searchbar{position:relative;margin-top:18px;max-width:560px}
+  .searchbar input{
+    width:100%;font-family:'Hanken Grotesk';font-size:16px;
+    padding:14px 16px 14px 46px;
+    border:1.5px solid var(--line);border-radius:13px;
+    background:var(--card);color:var(--ink);outline:none;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  .searchbar input:focus{border-color:var(--teal);box-shadow:0 0 0 4px var(--teal-wash)}
+  .searchbar svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);
+    width:19px;height:19px;stroke:var(--muted)}
+  .searchbar .clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+    border:none;background:var(--paper-2);color:var(--ink-soft);cursor:pointer;
+    width:24px;height:24px;border-radius:50%;font-size:14px;display:none}
+  .searchbar .clear:hover{background:var(--coral-wash);color:var(--coral)}
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{max-width:1280px;margin:0 auto;padding:26px 28px 80px;display:grid;
+    grid-template-columns:248px 1fr;gap:30px;align-items:start}
+  @media(max-width:880px){.wrap{grid-template-columns:1fr;gap:18px}}
+
+  /* ---------- SIDEBAR ---------- */
+  aside{position:sticky;top:188px}
+  @media(max-width:880px){aside{position:static}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:18px;box-shadow:var(--shadow)}
+  .panel + .panel{margin-top:16px}
+  .panel h3{font-family:'Fraunces',serif;font-weight:600;font-size:12px;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--teal-deep);margin-bottom:12px}
+  .fag-list{display:flex;flex-direction:column;gap:4px}
+  .fag{display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+    border:none;background:transparent;cursor:pointer;font-family:'Hanken Grotesk';
+    font-size:14px;color:var(--ink-soft);padding:7px 9px;border-radius:9px;
+    transition:background .15s,color .15s}
+  .fag:hover{background:var(--paper-2)}
+  .fag.active{background:var(--teal);color:#fff;font-weight:600}
+  .fag.active .dot{box-shadow:0 0 0 2px #fff}
+  .fag .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+  .fag .ct{margin-left:auto;font-family:'JetBrains Mono';font-size:11px;
+    background:var(--paper-2);padding:1px 7px;border-radius:20px;color:var(--muted)}
+  .fag.active .ct{background:rgba(255,255,255,.22);color:#fff}
+
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg button{flex:1;min-width:fit-content;border:1px solid var(--line);
+    background:var(--paper);cursor:pointer;font-family:'Hanken Grotesk';font-size:12.5px;
+    padding:7px 10px;border-radius:9px;color:var(--ink-soft);transition:.15s;white-space:nowrap}
+  .seg button:hover{border-color:var(--teal)}
+  .seg button.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  /* ---------- MAIN ---------- */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:16px;flex-wrap:wrap;gap:10px}
+  .count{font-size:14px;color:var(--muted)}
+  .count b{font-family:'JetBrains Mono';color:var(--ink);font-weight:700}
+  .reset{border:none;background:none;color:var(--coral);cursor:pointer;font-size:13px;
+    font-weight:600;text-decoration:underline;text-underline-offset:3px}
+  .reset:hover{color:var(--teal-deep)}
+
+  .group-head{font-family:'Fraunces',serif;font-weight:600;font-size:17px;
+    color:var(--ink);margin:26px 0 12px;display:flex;align-items:center;gap:11px}
+  .group-head:first-child{margin-top:0}
+  .group-head .bar{width:4px;height:20px;border-radius:3px}
+  .group-head .gct{font-family:'JetBrains Mono';font-size:12px;color:var(--muted);
+    font-weight:400}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:15px;
+    padding:16px 17px;box-shadow:var(--shadow);transition:transform .18s,border-color .18s,box-shadow .18s;
+    cursor:pointer;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal)}
+  .card:hover{transform:translateY(-3px);border-color:var(--teal);
+    box-shadow:0 1px 0 rgba(22,32,31,.04),0 16px 36px -18px rgba(10,95,87,.4)}
+  .card .pns{font-family:'JetBrains Mono';font-size:11.5px;font-weight:500;
+    color:var(--teal-deep);background:var(--teal-wash);padding:2px 8px;border-radius:6px;
+    display:inline-block;letter-spacing:.02em}
+  .card h4{font-family:'Hanken Grotesk';font-weight:700;font-size:16px;
+    margin:9px 0 6px;line-height:1.25;color:var(--ink)}
+  .card .desc{font-size:13.5px;color:var(--ink-soft);
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .card.open .desc{-webkit-line-clamp:unset;overflow:visible}
+  .card .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;align-items:center}
+  .tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;
+    border:1px solid var(--line-soft);color:var(--muted);background:var(--paper)}
+  .tag.chap{font-family:'JetBrains Mono';color:var(--ink-soft)}
+  .tag.flag{background:var(--coral-wash);color:var(--coral);border-color:transparent}
+  .tag.frist{background:var(--teal-wash);color:var(--teal-deep);border-color:transparent}
+  .tag.kr{background:#f3ecd5;color:var(--gold);border-color:transparent;font-family:'JetBrains Mono'}
+
+  .extra{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
+    display:none;font-size:13px}
+  .card.open .extra{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .extra dl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px}
+  .extra dt{font-weight:700;color:var(--teal-deep);font-size:12px;
+    text-transform:uppercase;letter-spacing:.04em;align-self:start;white-space:nowrap}
+  .extra dd{color:var(--ink-soft)}
+
+  .empty{text-align:center;padding:70px 20px;color:var(--muted)}
+  .empty .big{font-family:'Fraunces',serif;font-size:40px;color:var(--line);margin-bottom:8px}
+
+  footer{max-width:1280px;margin:0 auto;padding:0 28px 50px;color:var(--muted);
+    font-size:12.5px;line-height:1.6;border-top:1px solid var(--line-soft);
+    margin-top:10px;padding-top:22px}
+  .kbd{font-family:'JetBrains Mono';font-size:11px;background:var(--card);
+    border:1px solid var(--line);padding:1px 6px;border-radius:5px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="brand">
+      <span class="logo"><span class="mark">N</span> Nye Veier · Konkurransegrunnlag</span>
+    </div>
+    <h1>E39 <em>Blørstad–Lyngdal</em></h1>
+    <p class="sub">Søkbar oversikt over <b>Kapittel D1.1</b> (arbeidsomfang), <b>D1.2</b> (krav/teknisk beskrivelse) og <b>Fagrapport Tunnel</b> (reguleringsfasen). Filtrer per fag og kilde, søk på tvers, klikk en oppføring for detaljer og henvisninger.</p>
+    <div class="searchbar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="Søk … (f.eks. «tunnel», «bru», «frist», «141.01», «klimagass»)" autocomplete="off">
+      <button class="clear" id="clearBtn" title="Tøm">✕</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside>
+    <div class="panel">
+      <h3>Fag</h3>
+      <div class="fag-list" id="fagList"></div>
+    </div>
+    <div class="panel">
+      <h3>Type</h3>
+      <div class="seg" id="typeSeg">
+        <button data-type="all" class="active">Alle</button>
+        <button data-type="Arbeidspakke">Arbeidspakke</button>
+        <button data-type="Krav">Krav</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Kapittel / del</h3>
+      <div class="seg" id="chapSeg">
+        <button data-chap="all" class="active">Alle</button>
+        <button data-chap="D1.1">D1.1</button>
+        <button data-chap="D1.2">D1.2</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Kilde</h3>
+      <div class="seg" id="srcSeg">
+        <button data-src="all" class="active">Alle</button>
+        <button data-src="KG">Konkurransegrunnlag</button>
+        <button data-src="FAG">Fagrapport</button>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="toolbar">
+      <span class="count"><b id="num">0</b> oppføringer vist</span>
+      <button class="reset" id="resetBtn">Nullstill filtre</button>
+    </div>
+    <div id="results"></div>
+  </main>
+</div>
+
+<footer>
+  Uoffisielt arbeidsverktøy generert fra opplastede dokumenter (Versjon 1, 13.04.2026 · EQS Rev. 1.4 / 2.6). Innholdet er forenklet for lesbarhet — <b>konkurransegrunnlagets originaltekst er styrende</b> ved enhver tvil. Tips: trykk <span class="kbd">/</span> for å hoppe til søk.
+</footer>
+
+<script>
+/* ---------- FAG-DEFINISJONER ---------- */
+const FAG = {
+  prosj:   {navn:"Prosjektering & plan",   farge:"#0f8a7e"},
+  rigg:    {navn:"Rigg, drift & adm.",      farge:"#6b7d7a"},
+  forb:    {navn:"Forberedende arbeider",   farge:"#8a6d3b"},
+  miljo:   {navn:"Klima & miljø",           farge:"#4f9d3a"},
+  energi:  {navn:"Energi & forsyning",      farge:"#c79214"},
+  vei:     {navn:"Vei & kryss",             farge:"#2b6cb0"},
+  konstr:  {navn:"Konstruksjoner",          farge:"#9c4221"},
+  tunnel:  {navn:"Tunnel",                  farge:"#5a3e85"},
+  elektro: {navn:"Elektro & automasjon",    farge:"#0a7ea0"},
+  ts:      {navn:"Trafikksikkerhet",        farge:"#c0392b"},
+  bim:     {navn:"BIM & dokumentasjon",     farge:"#2c7a7b"},
+  kontroll:{navn:"Kontroll & godkjenning",  farge:"#7b341e"},
+  grunn:   {navn:"Grunnforhold & geo",      farge:"#946b2d"},
+  anlegg:  {navn:"Anleggsteknikk & drift",  farge:"#7a8450"},
+  opsjon:  {navn:"Opsjoner",                farge:"#e8623c"},
+  garanti: {navn:"Garanti & drift",         farge:"#4a5568"},
+};
+
+/* ---------- DATA ---------- */
+const DATA = [
+/* === D1.1 — Overordnede arbeider === */
+{pns:"161.01",fag:"prosj",type:"Arbeidspakke",chap:"D1.1",ref:"2.2.1.1",title:"Optimaliserings- og klargjøringsfasen",desc:"Alt som skal til for gjennomføring av optimaliserings- og klargjøringsfasen.",info:{Fase:"Mellom signering C0.1 og C0.2",Merk:"Todelt: optimalisering + klargjøring. Resultat tilføyes i kapittel E4."}},
+{pns:"161.02",fag:"prosj",type:"Arbeidspakke",chap:"D1.1",ref:"2.2.1.2",title:"Prosjektering og omregulering",desc:"Alt som skal til for planlegging, prosjektering og eventuell omregulering for å levere kontraktsgjenstanden."},
+{pns:"179.01",fag:"rigg",type:"Arbeidspakke",chap:"D1.1",ref:"2.2.2.1",title:"Mobilisering, demobilisering, rigg, drift og administrasjon",desc:"Alt til mobilisering, demobilisering, rigg, drift, administrasjon og generelle kostnader ved å utføre kontraktsarbeidet."},
+{pns:"179.02",fag:"rigg",type:"Arbeidspakke",chap:"D1.1",ref:"2.2.2.2",title:"Kontorfasiliteter for byggherren",desc:"Etablere og vedlikeholde (inkl. renhold) kontorfasiliteter for byggherren.",info:{Omfang:"6 møblerte kontorplasser, skiftebrakke m/ vask/dusj adskilt for kvinner/menn, kjøkken m/ hvitevarer, møterom for min. 15 personer.",Plassering:"Tilknyttet, men adskilt fra entreprenørens rigg. Nettverk i kontor og møterom."}},
+
+/* === D1.1 — Forberedende === */
+{pns:"164.99",fag:"forb",type:"Arbeidspakke",chap:"D1.1",ref:"2.3.1",title:"Forberedende arbeider",desc:"Riving og miljøsanering av bygg, konstruksjoner og veier/veiutstyr, samt riving og omlegging av eksisterende infrastruktur (ikke begrenset til)."},
+{pns:"164.01",fag:"forb",type:"Arbeidspakke",chap:"D1.1",ref:"2.3.2",title:"Avskoging",desc:"All nødvendig avskoging for å levere kontraktsgjenstanden."},
+{pns:"164.02",fag:"forb",type:"Arbeidspakke",chap:"D1.1",ref:"2.3.3",title:"Grunnervervstiltak",desc:"Alle arbeider og tiltak i grunneieravtaler angitt i kapittel D2.09. Tiltak gjennomgås med grunneier før start; skriftlig bekreftelse innhentes etter tilbakeføring.",info:{Henvisning:"Grunneieravtaler i kapittel D2.09"}},
+
+/* === D1.1 — Øvrige kostnader === */
+{pns:"168.01",fag:"miljo",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.1",title:"Håndtering av syredannende bergarter",desc:"Håndtering av syredannende bergarter. Avklares med byggherren.",flags:["Regulerbar"],info:{Avregning:"Etter dokumentert og utført arbeid"}},
+{pns:"168.02",fag:"miljo",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.2",title:"Håndtering av sterkt forurensede masser (tilstandsklasse 5)",desc:"Håndtering av sterkt forurensede masser i tilstandsklasse 5.",flags:["Regulerbar"],info:{Avregning:"Etter dokumentert og utført arbeid"}},
+{pns:"168.05",fag:"miljo",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.3",title:"Reduksjon av klimagassutslipp",desc:"Redusere totale klimagassutslipp (ekskl. arealbruk) i utførelsesfasen med minimum 20 % mot byggherrens klimagassbudsjett.",info:{Krav:"Min. 20 % reduksjon",Merk:"Forplikter entreprenøren seg til mer enn 20 % i kap. E, reduseres tillatt utslippsramme tilsvarende."}},
+{pns:"168.11",fag:"miljo",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.4",title:"Støytiltak",desc:"Alle støytiltak for å oppfylle kontraktens krav."},
+{pns:"168.20",fag:"rigg",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.5",title:"Arbeid for tredjeparter",desc:"Alt til gjennomføring av arbeid for tredjeparter."},
+{pns:"168.21",fag:"elektro",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.6",title:"Etablering av løsninger for fiberaktører",desc:"Løsninger i samsvar med avtaler med fiberaktører.",info:{Henvisning:"Avtaler i kapittel D2.11"}},
+{pns:"166.01",fag:"energi",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.7",title:"Gjennomgående høyspentforsyning",desc:"Nødvendig permanent høyspentforsyning ved gjennomgående høyspent i firefelts motorvei fra Blørstadkrysset til Lyngdal."},
+{pns:"166.02",fag:"energi",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.8",title:"Permanent lavspentforsyning",desc:"Nødvendig lavspentforsyning samt infrastruktur (føringsveier, rør, kummer, tekniske bygg). Samarbeid med netteier.",info:{Kostnad:"Byggherren dekker netteiers andel av anleggsbidraget."}},
+{pns:"166.03",fag:"energi",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.9",title:"Omlegging av lavspentforsyning",desc:"Nødvendig omlegging av lavspentforsyning. Entreprenøren har koordineringsansvar; samarbeid med netteier.",info:{Kostnad:"Byggherren dekker netteiers andel av anleggsbidraget for omlegging."}},
+{pns:"166.99",fag:"energi",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.10",title:"Byggestrøm",desc:"Maksimalt effektuttak per tilkoblingspunkt er 1 MW. Over 1 MW krever søknad om tilknytning på vilkår om utkobling hos nettselskap.",info:{Grense:"1 MW per tilkoblingspunkt"}},
+{pns:"166.99",fag:"miljo",type:"Arbeidspakke",chap:"D1.1",ref:"2.4.11",title:"Forprosjekt arealbruksendringer",desc:"Forprosjekt for å kartlegge mulighet for klimagassreduksjon ved arealbruksendringer (inngrep i arealer med høy verdi/karboninnhold). Resulterer i prosjektrapport.",flags:["Kostnadsramme","Regulerbar"],kr:"NOK 2 mill.",info:{"Kostnadsramme":"Maks NOK 2 000 000 eks. mva (forprosjekt). Anbefalt prosjekt: maks NOK 5 000 000.",Avregning:"Medgåtte timer × timepriser i kap. E",Frist:"Leveres min. 4 uker før opsjonsfrist (punkt 2.12.1)"}},
+
+/* === D1.1 — Vei === */
+{pns:"120.01",fag:"vei",type:"Arbeidspakke",chap:"D1.1",ref:"2.5.1",title:"Hovedvei",desc:"Komplett firefelts vei, fartsgrense 110 km/t, ÅDT 12 000–20 000, fra profil 8750 (PlanID 202007) til profil 3410 E39 Herdal–Røyskår (PlanID 201905).",info:{Fartsgrense:"110 km/t","ÅDT":"12 000–20 000",Strekning:"Profil 8750 → profil 3410"}},
+{pns:"121.01",fag:"vei",type:"Arbeidspakke",chap:"D1.1",ref:"2.5.2",title:"Blørstadkrysset",desc:"Komplettere og ferdigstille komplett kryss på Blørstad. Sømløs fysisk og digital integrasjon i tilstøtende veianlegg (E39 Mandal–Blørstad under bygging).",info:{Koordinering:"Med totalentreprenør i E39 Mandal–Blørstad",Klargjøring:"Plan for integrasjon i eksisterende veianlegg"}},
+{pns:"121.02",fag:"vei",type:"Arbeidspakke",chap:"D1.1",ref:"2.5.3",title:"Herdalskrysset",desc:"Bygge og ferdigstille komplett kryss på Herdal. Sømløs integrasjon i eksisterende veianlegg (som-bygget modell vedlagt D2.11).",info:{Klargjøring:"Plan for integrasjon i eksisterende veianlegg"}},
+{pns:"150.03.20",fag:"vei",type:"Arbeidspakke",chap:"D1.1",ref:"2.5.4",title:"Adkomst til rensebasseng på Flaten",desc:"Etablere adkomst fra stopplomme til rensebasseng. Tilførselsvei fra Flaten til rensebasseng inngår IKKE.",flags:["Avgrensning"]},
+{pns:"150.01.20",fag:"vei",type:"Arbeidspakke",chap:"D1.1",ref:"2.6.1.1",title:"Sideveisnett / sekundærveier",desc:"Komplett sideveisnett og sekundærveier: private, kommunale, fylkes- og riksveier. Inkluderer omlegginger og trafikkavvikling.",info:{Ansvar:"Entreprenøren ansvarlig for eventuell omregulering",Henvisning:"Kapittel D2.10"}},
+{pns:"163.01",fag:"vei",type:"Arbeidspakke",chap:"D1.1",ref:"2.7.1",title:"Omklassifisering av eksisterende vei",desc:"Utarbeide nødvendig dokumentasjon for omklassifisering av eksisterende veinett som berøres."},
+
+/* === D1.1 — Konstruksjoner === */
+{pns:"131.01",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.1",title:"Grundelandsvatnet bru",desc:"Etablere konstruksjonen som angitt i reguleringsplanen."},
+{pns:"132.01",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.2",title:"Vallerås bru",desc:"Etablere konstruksjonen som angitt i reguleringsplanen."},
+{pns:"130.01",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.3",title:"Audnedalen bru",desc:"Etablere konstruksjonen som angitt i reguleringsplanen.",flags:["Se opsjon"],info:{Grunnforhold:"Egen opsjon 2.11.2 — entreprenøren bærer all grunnforholdsrisiko"}},
+{pns:"131.02",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.4",title:"Faksevatnet bru",desc:"Etablere konstruksjonen som angitt i reguleringsplanen."},
+{pns:"131.03",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.5",title:"Høylandsbekken bru",desc:"Etablere konstruksjonen som angitt i reguleringsplanen."},
+{pns:"131.04",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.6",title:"Lene bruer",desc:"Etablere konstruksjonen som angitt i reguleringsplanen.",flags:["Se opsjon"],info:{Grunnforhold:"Egen opsjon 2.11.3 — entreprenøren bærer all grunnforholdsrisiko"}},
+{pns:"131.05",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.7",title:"Optedal bru",desc:"Etablere konstruksjonen som angitt i reguleringsplanen."},
+{pns:"133.01",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.8",title:"Stiland kulvert / faunapassasje",desc:"Etablere konstruksjonen. Skal ivareta eventuell fremtidig kryssløsning angitt i reguleringsplan."},
+{pns:"134.01",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.9",title:"Optedal faunapassasje",desc:"Etablere konstruksjonen som angitt i reguleringsplanen."},
+{pns:"133.99",fag:"konstr",type:"Arbeidspakke",chap:"D1.1",ref:"2.8.10",title:"Øvrige konstruksjoner hovedvei",desc:"Alle øvrige nødvendige konstruksjoner: bruer, støttemurer, overganger, krysninger, faunapassasjer, kulverter m.m."},
+
+/* === D1.1 — Tunnel === */
+{pns:"141.01.01",fag:"tunnel",type:"Arbeidspakke",chap:"D1.1",ref:"2.9.2",title:"Eikeråsheiatunnelen",desc:"Komplett ferdig toløpstunnel iht. reguleringsplan, inkl. bergsikring av tverrforbindelser, tekniske rom mv. (fastpris).",info:{Merk:"Bergsikring og injeksjon av hovedløp prises separat i 2.9.4 og 2.9.5."}},
+{pns:"141.01.03",fag:"tunnel",type:"Arbeidspakke",chap:"D1.1",ref:"2.9.3",title:"Eikeråsheiatunnelen — Tunnelportaler",desc:"Komplett ferdig bygget tunnelportaler."},
+{pns:"141.01.10–15",fag:"tunnel",type:"Arbeidspakke",chap:"D1.1",ref:"2.9.4",title:"Eikeråsheiatunnelen — Bergsikring",desc:"Alt arbeid med bergsikring iht. funksjonskrav og N500. Avregnes etter dokumentert sikringsklasse, løpemeter langs tunnelaksen.",flags:["Regulerbar"],info:{Avregning:"Løpemeter per sikringsklasse (regulerbare poster)","Estimerte mengder (pr løp)":"Kl. I: 1000 m · Kl. II: 1000 m · Kl. III: 600 m · Kl. IVa: 300 m · Kl. IVb: 100 m · Kl. V: 25 m",Merk:"Enhetspriser dekker alle direkte/indirekte kostnader inkl. rigg/drift og ineffektiv drift. Tidsregulering: punkt 2.10."}},
+{pns:"141.01.20–21",fag:"tunnel",type:"Arbeidspakke",chap:"D1.1",ref:"2.9.5",title:"Eikeråsheiatunnelen — Injeksjon",desc:"Alt arbeid med injeksjon iht. funksjonskrav, ytre miljø og N500. Avregnes som injisert løpemeter langs tunnelaksen.",flags:["Regulerbar"],info:{Avregning:"Injisert løpemeter per tetthetsklasse (regulerbare poster)","Estimerte mengder (pr løp)":"≤10 l/min/100m: 450 m · >10 l/min/100m: 650 m",Merk:"Entreprenøren fastsetter tetthetskrav i egen ing.geol. rapport. Tidsregulering: punkt 2.10."}},
+{pns:"2.10",fag:"tunnel",type:"Krav",chap:"D1.1",ref:"2.10",title:"Tidsregulering av tunnelarbeider (regulerbare poster)",desc:"Teoretisk beregningsmodell for tidskonsekvens av mengdeøkning på bergsikring/injeksjon når arbeidet ligger på kritisk linje. Regulerer dagmulktsbelagte frister.",info:{Egenrisiko:"Entreprenøren bærer tidskonsekvens tilsvarende 4 uker (parameter A)",Effektivitetsfaktor:"F = 0,75 (forutsetter vekseldrift mellom to stuffer i toløpstunnel)",Ekvivalenttider:"Sikring 0,57–9,47 t/m etter klasse; injeksjon 2,7 / 2,2 t/m",Modell:"T = Σ per klasse, for ett løp, kun lengste stuff på kritisk linje"}},
+
+/* === D1.1 — Opsjoner === */
+{pns:"Opsjon",fag:"opsjon",type:"Arbeidspakke",chap:"D1.1",ref:"2.11.1",title:"Innovasjonsprosjekt arealbruksendringer",desc:"Gjennomføre prosjektet valgt i forprosjektrapport (2.4.11). Mulig å søke offentlig finansiering/tilskudd.",flags:["Kostnadsramme","Frist"],kr:"NOK 5 mill.",info:{"Kostnadsramme":"Maks NOK 5 000 000 eks. mva.",Frist:"Utløsning innen 01.10.2027",Merk:"Ekstern tilleggsfinansiering inngår ikke i kostnadsrammen."}},
+{pns:"Opsjon",fag:"opsjon",type:"Arbeidspakke",chap:"D1.1",ref:"2.11.2",title:"Grunnforholdsrisiko Audnedalen bru",desc:"Entreprenøren bærer all grunnforholdsrisiko for 130.01 Audnedalen bru. Avvikende grunn gir ikke vederlagsjustering eller fristforlengelse.",flags:["Risiko","Frist"],info:{Frist:"Før signering av kapittel C0.2",Regulering:"Endelig og uttømmende mellom partene"}},
+{pns:"Opsjon",fag:"opsjon",type:"Arbeidspakke",chap:"D1.1",ref:"2.11.3",title:"Grunnforholdsrisiko Lene bruer",desc:"Entreprenøren bærer all grunnforholdsrisiko for 131.04 Lene bruer. Avvikende grunn gir ikke vederlagsjustering eller fristforlengelse.",flags:["Risiko","Frist"],info:{Frist:"Før signering av kapittel C0.2",Regulering:"Endelig og uttømmende mellom partene"}},
+{pns:"Opsjon",fag:"opsjon",type:"Arbeidspakke",chap:"D1.1",ref:"2.11.4",title:"Optedal — Delovertakelse og trafikkpåsetting",desc:"Oppnå milepæl for delovertakelse og trafikkpåsetting Fladen–Lyngdal, inkl. omlegging eksisterende E39 og etablering av Optedal faunapassasje.",flags:["Frist"],info:{Frist:"Før signering av kapittel C0.2",Milepæl:"Oppnådd når byggherren har godkjent delovertakelse og åpning for trafikk. Krever offentlige tillatelser."}},
+{pns:"Opsjon",fag:"opsjon",type:"Arbeidspakke",chap:"D1.1",ref:"2.11.5",title:"BREEAM Infrastructure",desc:"Sertifisering iht. BREEAM Infrastructure Whole Project på nivå «very good». Bygger på byggherrens tidligere sertifiseringsarbeid.",flags:["Frist"],info:{Frist:"Før signering av kapittel C0.2",Krav:"Entreprenøren skal ha BREEAM Infrastructure-assessor; byggherren har innsyn."}},
+
+/* === D1.1 — Garanti === */
+{pns:"169.01",fag:"garanti",type:"Arbeidspakke",chap:"D1.1",ref:"2.12.1",title:"Kontraktsarbeid i garantiperioden",desc:"Inspeksjoner og annet arbeid som entreprenøren skal utføre i garantiperioden, som beskrevet i kontrakten."},
+
+/* === D1.2 — Klima & miljø === */
+{pns:"1.2.1",fag:"miljo",type:"Krav",chap:"D1.2",ref:"1.2.1",title:"Miljøplan",desc:"Helhetlig miljøplan iht. NS 3466:2009, med utgangspunkt i byggherrens miljøplan fra reguleringsfasen. Holdes oppdatert til enhver tid.",info:{Standard:"NS 3466:2009",Omfang:"Reguleringsplan, tillatelser, kontrakt og lov/forskrift gjennom hele kontraktsperioden."}},
+{pns:"1.2.2",fag:"miljo",type:"Krav",chap:"D1.2",ref:"1.2.2",title:"Rigg- og marksikringsplan",desc:"Plan for midlertidige og permanente tiltak innen ytre miljø og arealbruk. Utarbeides i modell + tekstlig beskrivelse."},
+{pns:"1.2.3",fag:"miljo",type:"Krav",chap:"D1.2",ref:"1.2.3",title:"Natur- og terrenginngrep",desc:"Tilbakelevere rigg/deponi, adkomst- og anleggsveier i opprinnelig tilstand eller bedre. Primært naturlig revegetering; ellers stedegen, norskprodusert frøblanding.",info:{Krav:"Lavt skjøtselsbehov, stedegen vegetasjon i kryssområder",Leveranse:"Plan for natur-/terrenginngrep + plan for videre skjøtsel; dokumentere sluttresultat",Merk:"Vurder naturbaserte løsninger for klimatilpasning."}},
+{pns:"1.2.4",fag:"miljo",type:"Krav",chap:"D1.2",ref:"1.2.4",title:"Estetisk prosjektplan",desc:"Estetisk prosjektplan iht. arbeidsmetodikk i byggherrens estetiske veileder. Arbeidet gjennomføres i samsvar med planen."},
+{pns:"1.2.5",fag:"miljo",type:"Krav",chap:"D1.2",ref:"1.2.5",title:"Utslippstillatelser",desc:"Byggherren søker utslippstillatelse for utførelsesfasen (entreprenøren overvåker/rapporterer). Entreprenøren søker for driftsfasen (byggherren godkjenner før innsendelse).",info:{Utførelsesfase:"Byggherren søker — entreprenøren overvåker og rapporterer",Driftsfase:"Entreprenøren søker — byggherren godkjenner; krav skal overholdes i prosjekterte/utførte løsninger"}},
+
+/* === D1.2 — Trafikksikkerhet === */
+{pns:"1.3",fag:"ts",type:"Krav",chap:"D1.2",ref:"1.3",title:"Trafikksikkerhet",desc:"Trafikksikkerhetsrevisjoner før trafikkpåsetting iht. vegsikkerhetsforskriften § 4. Ikke revisjon i innledende bruksfase etter byggherrens overtakelse.",info:{Krav:"Alle arbeider innenfor sikkerhetssonen ferdig før trafikkpåsetting",Beslutning:"Tiltak besluttes i samråd med byggherren — entreprenøren gjennomfører alle"}},
+
+/* === D1.2 — Grunnforhold / Grunnerverv === */
+{pns:"1.4.1",fag:"grunn",type:"Krav",chap:"D1.2",ref:"1.4.1",title:"Erverv av grunn",desc:"Byggherren sørger for tiltredelse iht. vedtatt reguleringsplan. Gjenstående eiendom erverves ved ekspropriasjon. Behov avklares i optimaliserings-/klargjøringsfasen.",info:{Ansvar:"Entreprenøren bistår med nødvendige avklaringer på forespørsel"}},
+{pns:"1.4.2",fag:"grunn",type:"Krav",chap:"D1.2",ref:"1.4.2",title:"Forholdet til grunneiere",desc:"Gjennomføre tiltak i byggherrens grunneieravtaler. Eksisterende/driftsveier tilbakeleveres min. i opprinnelig standard. Egne tredjepartsavtaler følger ekspropriasjonsrettslige prinsipper.",info:{Kostnad:"Byggherren bærer kostnad for tiltak i avtaler inngått etter tilbudsfristen",Innsyn:"Byggherren skal på forespørsel gis innsyn i tredjepartsavtaler"}},
+{pns:"1.5.1",fag:"grunn",type:"Krav",chap:"D1.2",ref:"1.5.1",title:"Geologisk og geoteknisk prosjektering",desc:"Ingeniørgeologiske rapporter for byggeplan iht. N200 og N500. Innmelding av eventuelle kvikkleiresoner til NVE.",info:{Tunnel:"Prosjekteringskontrollklasse 3 (PKK3) og utførelseskontrollklasse 3 (UKK3)"}},
+{pns:"1.5.2",fag:"grunn",type:"Krav",chap:"D1.2",ref:"1.5.2",title:"Dokumentasjon og kontroll i utførelsesfasen",desc:"Løpende målinger/registreringer for å påse at prosjekteringsforutsetninger overholdes. I tunnel: MWD, geologisk kartlegging, bergsikring og «as-drilled-data» på åpent format (.IFC, .LAS).",info:{Tunnel:"Foto av hver salve etter rensk/spyling; skanning før/etter sprøytebetong og bergsikring"}},
+{pns:"1.6",fag:"miljo",type:"Krav",chap:"D1.2",ref:"1.6",title:"Rigg- og deponiområder",desc:"Plan for rigg- og deponiområder (innhold, etablering, tilbakeføring). Salg/transport av masser ut av anlegget krever byggherrens godkjenning.",info:{Krav:"Vurdere samlet deponibehov og behov for mellomlagring; etablere supplerende deponier ved behov"}},
+
+/* === D1.2 — BIM & dokumentasjon === */
+{pns:"1.7.1",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.7.1",title:"BIM — generelle krav",desc:"BIM gjennomføringsplan for alle faser. Modellbasert utførelse iht. ISO EN 19650 del 1 og 2. Bruk av Virtual Design and Construction (VDC).",info:{Standard:"ISO EN 19650-1 og -2"}},
+{pns:"1.7.2.1",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.7.2.1",title:"CDE — Felles datamiljø",desc:"Etablere CDE/dataplattform for hele utførelsen: prosjekteringsmodeller, KS, KK, oppfølging, godkjenning og dokumentasjon. Sporbar revisjonshåndtering.",info:{Krav:"Topologi og funksjonalitet beskrives i BIM gjennomføringsplan"}},
+{pns:"1.7.2.2",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.7.2.2",title:"PIM — Prosjektinformasjonsmodell",desc:"Prosjektinformasjonsmodell beriket med fremdrift, HMS, KK, godkjenninger, som-bygget og FDV. Alle fagfelt inngår. Åpne filformater; integrasjon mot GIS.",info:{Grunnlag:"V770 Modellgrunnlag, NVDB og Brutus; klassifisering NEK IEC 81346-1/-2 og NS-ISO 81346-12; TFM iht. N601",Tidspunkt:"Operativ ved oppstart av optimaliserings-/klargjøringsfasen, tilgjengelig for alle brukere"}},
+{pns:"1.7.2.3",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.7.2.3",title:"Innsynsløsning",desc:"Innsynsløsning som gjør all PIM-informasjon tilgjengelig — PC og mobil, fungerer offline, leser metadata, kobler objekt mot dokumentasjon, filtrering. Erstatter tegninger iht. R700.",info:{AR:"Modellen vises i felt med AR eller skjerm; entreprenøren stiller AR-utstyr til byggherrens disposisjon"}},
+{pns:"1.7.2.4",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.7.2.4",title:"Dronefilming og -foto",desc:"Dronefilming hver 14. dag, samt dronefoto på alle sentrale punkt for 360°-visning. Originaldata leveres til mottakspunkt. Anonymisert.",info:{Frekvens:"Hver 14. dag"}},
+{pns:"1.7.2.5",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.7.2.5",title:"Informasjon til tredjepart",desc:"Modeller og tegninger der det er nødvendig for kontroll, godkjenning og dokumentasjon av tredjepart. Byggherrens tittelfelt benyttes."},
+{pns:"1.7.3",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.7.3",title:"Byggverksinformasjon til driftsfasen (AIM)",desc:"Levere verifisert som-bygget-PIM og modellbasert FDV til byggherrens AIM. Objektnedbrytning knyttes til byggherrens NVDB-objektliste.",info:{Format:"Avklares i optimaliserings-/klargjøringsfasen"}},
+{pns:"1.10.1",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.10.1",title:"Som bygget- og FDV-dokumentasjon",desc:"Levere som-bygget-dokumentasjon, modeller og FDV. Maskinlesbart og åpent format; enkeltdokumenter knyttet til objekter i modell (ingen duplisering).",info:{Krav:"Relasjonsdata (objekt-ID ↔ dokument-ID) i åpent format; metadata følger dokumentasjonen ved systemoverføring"}},
+{pns:"1.10.2",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.10.2",title:"Levering av data til offentlige registre",desc:"Registrere og levere data til FKB/Norge digitalt, NVDB, Brutus, Trygg Tunnel, VTS, NVE, Grunnforurensning/Vann-Nett/Vannmiljø/Artsobservasjoner m.fl.",info:{Krav:"Også ledningsregistreringsforskriften, Nasjonal register for luftfartshindre, eKomPortalen. Alt leveres også til byggherren."}},
+{pns:"1.10.3",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.10.3",title:"Bilder av installasjoner og objekter",desc:"Bilder av alle elektriske anleggsobjekt/installasjoner knyttet til NVDB-objektID og PIM. Koordinatfestede 360° panoramabilder etter trafikkpåsetting. LiDAR-skanning av kontraktsgjenstanden.",info:{Krav:"Anonymiserte bilder; LiDAR tilpasses byggherrens systemer"}},
+{pns:"1.10.4–6",fag:"bim",type:"Krav",chap:"D1.2",ref:"1.10.4",title:"Oppmåling, sluttregulering og arealregnskap",desc:"Bistå byggherrens oppmålingsforretning, levere beslutningsgrunnlag for sluttregulering, og GIS-datasett/regnskap for arealendringer (midlertidige og permanente)."},
+
+/* === D1.2 — Kontroll & godkjenning === */
+{pns:"1.8.1",fag:"kontroll",type:"Krav",chap:"D1.2",ref:"1.8.1",title:"Bruer og bærende konstruksjoner — kontroll",desc:"Godkjenning av konstruksjoner som krever det (Vegdirektoratet, Bane NOR m.fl.). Brukonsept til byggherren min. 2 uker før konseptkontroll hos myndighet.",info:{Standard:"Prosjekteringskontroll iht. NS-EN 1990:2002+A1:2005+NA:2016 der offentlig kontroll ikke gjelder"}},
+{pns:"1.8.2",fag:"kontroll",type:"Krav",chap:"D1.2",ref:"1.8.2",title:"Forskaling, stillaser og hjelpekonstruksjoner",desc:"Vurdering av skadepotensial iht. NS-EN 12812:2008. Kategori B: prosjekterings-/utførelseskontroll iht. NS-EN 1990. Totalansvarlig koordinator for all brureis.",info:{Standard:"NS-EN 12812:2008; NS-EN 1990 for kategori B"}},
+{pns:"1.8.3",fag:"kontroll",type:"Krav",chap:"D1.2",ref:"1.8.3",title:"Kostnader for kontroll og godkjenning (konstruksjoner)",desc:"Entreprenøren bærer kostnad for kontroll/godkjenning av offentlig myndighet.",flags:["Regulerbar"],info:{Avregning:"Etter rater og medgått tid"}},
+{pns:"1.8.4",fag:"kontroll",type:"Krav",chap:"D1.2",ref:"1.8.4",title:"Godkjenning av tunneler",desc:"Entreprenøren ansvarlig for at tunneler godkjennes for byggestart og brukstillatelse, og for komplett søknadsunderlag. Byggherren sender søknadene til Vegdirektoratet.",info:{Frist:"Komplett underlag tilgjengelig for byggherren min. 2 uker før innsendelse",Plan:"Plan for godkjenning/brukstillatelse som ivaretar frister i kap. C2.1"}},
+{pns:"1.8.5–6",fag:"kontroll",type:"Krav",chap:"D1.2",ref:"1.8.5",title:"Skilt-/oppmerkingsplaner og grensesnitt",desc:"Skilt- og oppmerkingsplaner godkjent og iverksatt før trafikkpåsetting (også ved delåpning). Informere berørte myndigheter om tiltak på fylkes-/kommunale veier."},
+{pns:"1.9",fag:"kontroll",type:"Krav",chap:"D1.2",ref:"1.9",title:"Systematisk ferdigstillelse",desc:"Gjennomføring iht. «Veileder for systematisk ferdigstillelse i Nye Veier», alle fag og faser. Ingen åpne avvik/mangler ved overtakelse.",info:{Krav:"Kontinuerlig informasjonsleveranse nedbrutt etter PNS; rettidig leveranse"}},
+{pns:"1.11",fag:"garanti",type:"Krav",chap:"D1.2",ref:"1.11",title:"Opplæring og teknisk støtte",desc:"Opplæring av driftsentreprenør og VTS-personell (plan utarbeides og gjennomføres). Teknisk støtte til driftsentreprenør i 3 måneder etter overtakelse.",info:{Varighet:"Teknisk støtte i 3 måneder etter overtakelse"}},
+
+/* === D1.2 — Teknisk: Veibygging === */
+{pns:"2.1.1",fag:"ts",type:"Krav",chap:"D1.2",ref:"2.1.1",title:"Krav til trafikkregulering",desc:"Firefelts motorvei: beredskapsklasse TBK1a. Fullgrafiske fartsgrenseskilt med min. 10 budskap (fare/arbeidsvarsling). Kjørefeltsignaler i tunneler >500 m; toveistrafikk i ett løp >500 m.",info:{"Skiltavstand":"Maks 500 m mellom variable skilt",Beredskap:"TBK1a"}},
+{pns:"2.1.2",fag:"vei",type:"Krav",chap:"D1.2",ref:"2.1.2",title:"Veioppmerking",desc:"Forsterket veioppmerking på kjørefeltlinjer mot midtdeler og ytre veiskulder. Kun hovedvei (ikke ramper/øvrige veier)."},
+{pns:"2.1.3",fag:"vei",type:"Krav",chap:"D1.2",ref:"2.1.3",title:"Kantstein",desc:"Naturstein montert med armert bakstøp, eller tilsvarende løsning."},
+{pns:"2.1.4",fag:"vei",type:"Krav",chap:"D1.2",ref:"2.1.4",title:"Fastmerker",desc:"Fastmerker iht. nasjonale geodesi-standarder og NS3580. I tunnel: fastmerkenett hver 100 m; profilskilt på tunnelvegg hver 20 m.",info:{Standard:"NS3580"}},
+{pns:"2.1.5",fag:"miljo",type:"Krav",chap:"D1.2",ref:"2.1.5",title:"Vannhåndtering",desc:"Robuste, lite vedlikeholdskrevende løsninger for infiltrasjon og binding av forurensning. Åpne løsninger i størst mulig grad."},
+{pns:"2.1.6",fag:"vei",type:"Krav",chap:"D1.2",ref:"2.1.6",title:"Grøfter, drenering og brønner",desc:"Reetablere uttrekksgrøfter, landbruksdrenering, energibrønner og øvrige anlegg som påvirkes, slik at funksjonen opprettholdes — også i utførelsesfasen."},
+
+/* === D1.2 — Teknisk: Bruer & konstruksjoner === */
+{pns:"2.2.1",fag:"konstr",type:"Krav",chap:"D1.2",ref:"2.2.1",title:"Støpeplaner",desc:"Forelegge støpeplaner med støpedato for byggherren min. 1 uke før oppstart av støpearbeidene.",info:{Frist:"Min. 1 uke før støpestart"}},
+{pns:"2.2.2",fag:"konstr",type:"Krav",chap:"D1.2",ref:"2.2.2",title:"Antigrafittibehandling",desc:"Antigraffitibehandling på alle synlige flater opp til 3 meters høyde, inkl. tunnelportaler."},
+
+/* === D1.2 — Teknisk: Tunnel === */
+{pns:"2.3.1",fag:"tunnel",type:"Krav",chap:"D1.2",ref:"2.3.1",title:"Vannuttak og renseanlegg",desc:"Vannuttak for vaskevann ved tunnel/nærmeste kryss. Renseløsning dimensjonert for samtidig vask av alle løp ved 100 l/m tunnel/løp. Sensorer + automatiske ventiler.",info:{Dimensjonering:"100 liter per meter tunnel per løp"}},
+{pns:"2.3.2",fag:"tunnel",type:"Krav",chap:"D1.2",ref:"2.3.2",title:"Tunnelprofil T9,5",desc:"Bruk av tunnelprofil T9,5. Variable skilt i tunnel monteres i heng over kjørefelt.",info:{Profil:"T9,5"}},
+{pns:"2.3.3",fag:"tunnel",type:"Krav",chap:"D1.2",ref:"2.3.3",title:"Tekniske bygg",desc:"Tekniske bygg plasseres med direkte adkomst fra havarinisje på høyre side i kjøreretning (sikkerhet i driftsfase)."},
+
+/* === D1.2 — Teknisk: Elektro & automasjon === */
+{pns:"2.4.1",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.1",title:"Høyspentanlegg",desc:"Permanent høyspentforsyning + infrastruktur. Koordineringsansvar for omlegging. Trekkerør og kum for høyspentkabel til lading av elbiler på Park and Ride.",info:{Kostnad:"Byggherren dekker anleggsbidrag for permanent forsyning og omlegging"}},
+{pns:"2.4.2",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.2",title:"Belysningsanlegg",desc:"Lyskilder skal kunne dimmes og overvåkes med overordnet system."},
+{pns:"2.4.3",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.3",title:"Automasjonsanlegg",desc:"Automasjonsanlegg som tilfredsstiller krav fra regional Veitrafikksentral; integreres mot eksisterende systemer."},
+{pns:"2.4.4",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.4",title:"Samarbeid med VTS",desc:"Overta byggherrens ansvar iht. «Samarbeidsavtale angående infrastruktur i veganlegg tilknyttet VTS» (kapittel D2)."},
+{pns:"2.4.5",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.5",title:"Nettverk",desc:"Redundant fibernettverk for intern kommunikasjon i kontraktsgjenstanden."},
+{pns:"2.4.6",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.6",title:"Gjennomgående fiberkapasitet",desc:"Gjennomgående G144 stamfiberkabel ende-til-ende som hovedkommunikasjon mot VTS og telefoni. Forberedt for fortsettelse til tilstøtende strekninger.",info:{Type:"G144 stamfiber"}},
+{pns:"2.4.7",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.7",title:"Gjennomgående trekkerør",desc:"Gjennomgående 4 × 40 mm trekkerør ende-til-ende, pluss reservekapasitet iht. vegnormaler. Farge avklares med byggherren.",info:{Dimensjon:"4 × 40 mm + reserve"}},
+{pns:"2.4.8",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.8",title:"ITV-system",desc:"Internt tv-system (ITV) for overvåkning av hele veistrekningen, med reservekapasitet og tilrettelagt for fremtidige utvidelser."},
+{pns:"2.4.9",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.9",title:"Bomstasjoner",desc:"Bomstasjoner med tilhørende infrastruktur inkl. plass til innkrevingssystemer. Byggherren godkjenner plassering; koordinering med regionalt bomselskap.",info:{Grensesnitt:"Bomselskapet leverer innhold i teknisk bygg og bomteknisk utstyr"}},
+{pns:"2.4.10",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.10",title:"Tellestasjon",desc:"Nivå 1 tellestasjon med kontinuerlig trafikkdata mellom hvert kryss på riksveg. Testes mot Statens vegvesens systemer; følger SVVs formater."},
+{pns:"2.4.11",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.11",title:"Klimastasjon",desc:"Etablere en klimastasjon. Byggherren godkjenner plassering."},
+{pns:"2.4.12",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.12",title:"Skjermsystem",desc:"Operatørstasjoner i teknisk rom for tunnel, satt opp med innlogging til operativ SCADA-løsning."},
+{pns:"2.4.13",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.13",title:"Nødnett",desc:"Alt utstyr knyttet til infrastruktur og forberedelse for nødnettspesifikt utstyr (jf. N500). Planlegges/utføres i samarbeid med DSB.",info:{Kostnad:"Nødnettsutstyr leveres av DSB; kostnader dekkes av byggherren"}},
+{pns:"2.4.14",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.14",title:"Kringkasting og elektronisk kommunikasjon",desc:"Koordineringsansvar for mobildekning, nødnett (TETRA) og tele-/fiber; samarbeid med aktuelle aktører."},
+{pns:"2.4.15",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.15",title:"Driftspunkter",desc:"Samle elektroteknisk utstyr og skap ved driftspunkter. Sikker tilkomst til driftspunkter, vannprøvetaking og bruinspeksjon uten å påvirke ordinær trafikk."},
+{pns:"2.4.16",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.16",title:"SAT og UAT",desc:"Planlegge, gjennomføre og dokumentere Site Acceptance Test (SAT) og User Acceptance Test (UAT)."},
+{pns:"2.4.17",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.17",title:"Sikkerhet i automasjonsanlegg",desc:"Bestemmelse ettersendes.",flags:["Ettersendes"]},
+];
+
+/* ---------- STATE ---------- */
+let state={q:"",fag:"all",type:"all",chap:"all",src:"all"};
+
+/* ---------- BUILD SIDEBAR ---------- */
+const fagList=document.getElementById('fagList');
+function fagCounts(){
+  const c={}; DATA.forEach(d=>c[d.fag]=(c[d.fag]||0)+1); return c;
+}
+function renderFag(){
+  const counts=fagCounts();
+  let html=`<button class="fag ${state.fag==='all'?'active':''}" data-fag="all">
+    <span class="dot" style="background:linear-gradient(135deg,#0f8a7e,#e8623c)"></span>Alle fag
+    <span class="ct">${DATA.length}</span></button>`;
+  Object.keys(FAG).forEach(k=>{
+    if(!counts[k]) return;
+    html+=`<button class="fag ${state.fag===k?'active':''}" data-fag="${k}">
+      <span class="dot" style="background:${FAG[k].farge}"></span>${FAG[k].navn}
+      <span class="ct">${counts[k]}</span></button>`;
+  });
+  fagList.innerHTML=html;
+  fagList.querySelectorAll('.fag').forEach(b=>b.onclick=()=>{state.fag=b.dataset.fag;render();});
+}
+
+/* ---------- FILTER + RENDER ---------- */
+function matches(d){
+  const src=d.src||"KG";
+  if(state.fag!=='all' && d.fag!==state.fag) return false;
+  if(state.type!=='all' && d.type!==state.type) return false;
+  if(state.chap!=='all' && d.chap!==state.chap) return false;
+  if(state.src!=='all' && src!==state.src) return false;
+  if(state.q){
+    const hay=(d.pns+" "+d.title+" "+d.desc+" "+FAG[d.fag].navn+" "+(d.flags||[]).join(" ")+" "+
+      Object.entries(d.info||{}).map(([k,v])=>k+" "+v).join(" ")).toLowerCase();
+    return state.q.toLowerCase().split(/\s+/).every(t=>hay.includes(t));
+  }
+  return true;
+}
+
+function flagClass(f){
+  if(/frist/i.test(f)) return 'frist';
+  if(/kostnad|kr/i.test(f)) return 'kr';
+  return 'flag';
+}
+
+function card(d){
+  const flags=(d.flags||[]).map(f=>`<span class="tag ${flagClass(f)}">${f}</span>`).join('');
+  const krTag=d.kr?`<span class="tag kr">${d.kr}</span>`:'';
+  let extra='';
+  if(d.info){
+    extra=`<div class="extra"><dl>`+Object.entries(d.info)
+      .map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')+`</dl></div>`;
+  }
+  return `<div class="card" style="--teal:${FAG[d.fag].farge}" data-info="${d.info?1:0}">
+    <span class="pns" style="color:${FAG[d.fag].farge};background:${FAG[d.fag].farge}1a">${d.pns}</span>
+    <h4>${d.title}</h4>
+    <p class="desc">${d.desc}</p>
+    <div class="meta">
+      <span class="tag chap">${d.src==='FAG'?'Fagrapport':d.chap} · ${d.ref}</span>
+      ${d.src==='FAG'?'<span class="tag flag">Bakgrunn</span>':''}
+      ${krTag}${flags}
+    </div>
+    ${extra}
+  </div>`;
+}
+
+function render(){
+  // sidebar active states
+  document.querySelectorAll('#typeSeg button').forEach(b=>b.classList.toggle('active',b.dataset.type===state.type));
+  document.querySelectorAll('#chapSeg button').forEach(b=>b.classList.toggle('active',b.dataset.chap===state.chap));
+  document.querySelectorAll('#srcSeg button').forEach(b=>b.classList.toggle('active',b.dataset.src===state.src));
+  renderFag();
+
+  const list=DATA.filter(matches);
+  document.getElementById('num').textContent=list.length;
+  const res=document.getElementById('results');
+
+  if(!list.length){
+    res.innerHTML=`<div class="empty"><div class="big">∅</div>Ingen treff. Prøv et annet søk eller nullstill filtrene.</div>`;
+    return;
+  }
+
+  // group by fag
+  const groups={};
+  list.forEach(d=>{(groups[d.fag]=groups[d.fag]||[]).push(d);});
+  let html='';
+  Object.keys(FAG).forEach(k=>{
+    if(!groups[k]) return;
+    html+=`<div class="group-head"><span class="bar" style="background:${FAG[k].farge}"></span>
+      ${FAG[k].navn} <span class="gct">${groups[k].length}</span></div>
+      <div class="grid">${groups[k].map(card).join('')}</div>`;
+  });
+  res.innerHTML=html;
+
+  // expand on click (only if has extra info)
+  res.querySelectorAll('.card').forEach(c=>{
+    if(c.dataset.info==='1'){
+      c.onclick=()=>c.classList.toggle('open');
+    }else{
+      c.style.cursor='default';
+    }
+  });
+}
+
+/* ---------- EVENTS ---------- */
+const qInput=document.getElementById('q');
+const clearBtn=document.getElementById('clearBtn');
+qInput.addEventListener('input',e=>{
+  state.q=e.target.value;
+  clearBtn.style.display=state.q?'block':'none';
+  render();
+});
+clearBtn.onclick=()=>{qInput.value='';state.q='';clearBtn.style.display='none';render();qInput.focus();};
+document.querySelectorAll('#typeSeg button').forEach(b=>b.onclick=()=>{state.type=b.dataset.type;render();});
+document.querySelectorAll('#chapSeg button').forEach(b=>b.onclick=()=>{state.chap=b.dataset.chap;render();});
+document.querySelectorAll('#srcSeg button').forEach(b=>b.onclick=()=>{state.src=b.dataset.src;render();});
+document.getElementById('resetBtn').onclick=()=>{
+  state={q:"",fag:"all",type:"all",chap:"all",src:"all"};
+  qInput.value='';clearBtn.style.display='none';render();
+};
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&document.activeElement!==qInput){e.preventDefault();qInput.focus();}
+  if(e.key==='Escape'&&document.activeElement===qInput){qInput.blur();}
+});
+
+render();
+</script>
+</body>
+</html>
