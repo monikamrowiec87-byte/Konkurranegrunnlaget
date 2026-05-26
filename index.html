@@ -166,6 +166,55 @@
     margin-top:10px;padding-top:22px}
   .kbd{font-family:'JetBrains Mono';font-size:11px;background:var(--card);
     border:1px solid var(--line);padding:1px 6px;border-radius:5px;color:var(--ink-soft)}
+
+  /* ---------- VIEW TABS ---------- */
+  .viewtabs{display:inline-flex;gap:4px;margin-top:16px;background:var(--paper-2);
+    padding:4px;border-radius:12px;border:1px solid var(--line)}
+  .viewtabs button{border:none;background:transparent;cursor:pointer;
+    font-family:'Fraunces',serif;font-size:13px;font-weight:600;letter-spacing:.02em;
+    padding:8px 18px;border-radius:9px;color:var(--ink-soft);transition:.18s}
+  .viewtabs button.active{background:var(--ink);color:var(--paper)}
+
+  /* ---------- REGISTER ---------- */
+  .reg-wrap{max-width:1280px;margin:0 auto;padding:26px 28px 80px;display:none}
+  .reg-wrap.show{display:block}
+  .reg-intro{color:var(--ink-soft);font-size:14px;max-width:70ch;margin-bottom:8px}
+  .reg-legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 22px;font-size:12.5px}
+  .reg-legend span{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft)}
+  .reg-legend .pip{width:11px;height:11px;border-radius:3px}
+  .pip.done{background:var(--teal)}
+  .pip.iden{background:var(--gold)}
+  .pip.miss{background:var(--coral)}
+  .reg-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+  .reg-stat{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);
+    border-radius:13px;padding:14px 16px;box-shadow:var(--shadow)}
+  .reg-stat .n{font-family:'JetBrains Mono';font-size:26px;font-weight:700;line-height:1}
+  .reg-stat .l{font-size:12px;color:var(--muted);margin-top:5px}
+  .reg-group{margin-bottom:26px}
+  .reg-group h3{font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--ink);
+    margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .reg-group h3 .bar{width:4px;height:18px;border-radius:3px}
+  .reg-table{width:100%;border-collapse:collapse;background:var(--card);
+    border:1px solid var(--line);border-radius:13px;overflow:hidden;box-shadow:var(--shadow)}
+  .reg-table th{text-align:left;font-family:'Hanken Grotesk';font-size:11px;font-weight:700;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+    padding:10px 14px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+  .reg-table td{padding:11px 14px;font-size:13.5px;border-bottom:1px solid var(--line-soft);
+    color:var(--ink-soft);vertical-align:top}
+  .reg-table tr:last-child td{border-bottom:none}
+  .reg-table tr:hover td{background:rgba(15,138,126,.03)}
+  .reg-doc{font-weight:600;color:var(--ink)}
+  .reg-num{font-family:'JetBrains Mono';font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
+  .reg-status{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
+    padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .reg-status.done{background:var(--teal-wash);color:var(--teal-deep)}
+  .reg-status.iden{background:#f3ecd5;color:var(--gold)}
+  .reg-status.miss{background:var(--coral-wash);color:var(--coral)}
+  @media(max-width:680px){
+    .reg-table thead{display:none}
+    .reg-table tr{display:block;border-bottom:1px solid var(--line);padding:6px 0}
+    .reg-table td{display:block;border:none;padding:4px 14px}
+  }
 </style>
 </head>
 <body>
@@ -181,6 +230,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <input id="q" type="text" placeholder="Søk … (f.eks. «tunnel», «bru», «frist», «141.01», «klimagass»)" autocomplete="off">
       <button class="clear" id="clearBtn" title="Tøm">✕</button>
+    </div>
+    <div class="viewtabs" id="viewTabs">
+      <button data-view="data" class="active">Innhold</button>
+      <button data-view="register">Dokumentregister</button>
     </div>
   </div>
 </header>
@@ -224,6 +277,17 @@
     </div>
     <div id="results"></div>
   </main>
+</div>
+
+<div class="reg-wrap" id="regWrap">
+  <p class="reg-intro">Oversikt over fagrapporter og underlagsdokumenter fra regulerings- og prosjekteringsfasen, og status for om innholdet er hentet inn i dette verktøyet. Registeret er en arbeidssjekkliste — det viser hva som gjenstår å bearbeide.</p>
+  <div class="reg-legend">
+    <span><span class="pip done"></span>Bearbeidet — innhold lagt inn i «Innhold»-fanen</span>
+    <span><span class="pip iden"></span>Identifisert — dokument kjent, innhold ikke hentet inn</span>
+    <span><span class="pip miss"></span>Mangler / ufullstendig — innhold ikke tilgjengelig</span>
+  </div>
+  <div class="reg-stats" id="regStats"></div>
+  <div id="regBody"></div>
 </div>
 
 <footer>
@@ -303,6 +367,74 @@ const DATA = [
 {pns:"141.01.10–15",fag:"tunnel",type:"Arbeidspakke",chap:"D1.1",ref:"2.9.4",title:"Eikeråsheiatunnelen — Bergsikring",desc:"Alt arbeid med bergsikring iht. funksjonskrav og N500. Avregnes etter dokumentert sikringsklasse, løpemeter langs tunnelaksen.",flags:["Regulerbar"],info:{Avregning:"Løpemeter per sikringsklasse (regulerbare poster)","Estimerte mengder (pr løp)":"Kl. I: 1000 m · Kl. II: 1000 m · Kl. III: 600 m · Kl. IVa: 300 m · Kl. IVb: 100 m · Kl. V: 25 m",Merk:"Enhetspriser dekker alle direkte/indirekte kostnader inkl. rigg/drift og ineffektiv drift. Tidsregulering: punkt 2.10."}},
 {pns:"141.01.20–21",fag:"tunnel",type:"Arbeidspakke",chap:"D1.1",ref:"2.9.5",title:"Eikeråsheiatunnelen — Injeksjon",desc:"Alt arbeid med injeksjon iht. funksjonskrav, ytre miljø og N500. Avregnes som injisert løpemeter langs tunnelaksen.",flags:["Regulerbar"],info:{Avregning:"Injisert løpemeter per tetthetsklasse (regulerbare poster)","Estimerte mengder (pr løp)":"≤10 l/min/100m: 450 m · >10 l/min/100m: 650 m",Merk:"Entreprenøren fastsetter tetthetskrav i egen ing.geol. rapport. Tidsregulering: punkt 2.10."}},
 {pns:"2.10",fag:"tunnel",type:"Krav",chap:"D1.1",ref:"2.10",title:"Tidsregulering av tunnelarbeider (regulerbare poster)",desc:"Teoretisk beregningsmodell for tidskonsekvens av mengdeøkning på bergsikring/injeksjon når arbeidet ligger på kritisk linje. Regulerer dagmulktsbelagte frister.",info:{Egenrisiko:"Entreprenøren bærer tidskonsekvens tilsvarende 4 uker (parameter A)",Effektivitetsfaktor:"F = 0,75 (forutsetter vekseldrift mellom to stuffer i toløpstunnel)",Ekvivalenttider:"Sikring 0,57–9,47 t/m etter klasse; injeksjon 2,7 / 2,2 t/m",Modell:"T = Σ per klasse, for ett løp, kun lengste stuff på kritisk linje"}},
+
+/* === FAGRAPPORT TUNNEL (reguleringsfase, bakgrunn) === */
+{pns:"Fagrapport",src:"FAG",fag:"tunnel",type:"Krav",chap:"Fagrapport Tunnel",ref:"Sammendrag",title:"Tunneler i prosjektet — oversikt",desc:"Reguleringsfasen omfatter tre tunneler: Skreheia (~200 m), Vråheia (~700 m) og Eikeråsheia (~3000 m). Kun Eikeråsheia er egen arbeidspakke i konkurransegrunnlaget.",info:{Grunnlag:"Håndbok N100 og N500; dimensjoneringsklasse H3; normalprofil T10,5 uten forsterket midtoppmerking",Utforming:"To atskilte løp, ett per kjøreretning, kjørefeltbredde 3,5 m; portaler med traktform ~15 m",Driving:"Konvensjonell (boring og sprengning) med forinjeksjon etter behov; grunnforhold vurdert relativt oversiktlige"}},
+{pns:"Eikeråsheia",src:"FAG",fag:"tunnel",type:"Krav",chap:"Fagrapport Tunnel",ref:"Kap. 6",title:"Eikeråsheiatunnelen — hoveddata (reg.fase)",desc:"~3 km bergtunnel (3010 m), ~3040 m inkl. portaler, mellom Lene (vest, ca. kt. 55) og Haugdal (øst, ca. kt. 190). Tunnelklasse E.",info:{Lengde:"Ca. 3010 m berg, gj.snittlig stigning ~4,36 %","ÅDT":"15 000 / 14 000 (avhengig av tilførselsvei Udland)",Bergpilar:"Min. ~10 m mellom løpene (kan snevres inn ved portaler)",Sikkerhet:"Havarinisjer hver 500 m, tverrforbindelser hver 250 m, nødstasjoner hver 125 m",Ventilasjon:"Krav til ventilasjonsanlegg (>1000 m og ÅDT >1000); dimensjonerende brann 50 MW; langslufting med impulsvifter",Risiko:"Risikovurdering utført av Sweco i reg.fase; detaljert risikoanalyse utføres av totalentreprenør"}},
+{pns:"Vråheia",src:"FAG",fag:"tunnel",type:"Krav",chap:"Fagrapport Tunnel",ref:"Kap. 4",title:"Vråheiatunnelen — hoveddata (reg.fase)",desc:"~700 m, delområde 1, gjennom utmark nær jordbruksområde. Tunnelklasse E. Ikke egen arbeidspakke i konkurransegrunnlaget.",info:{Lengde:"Ca. 700 m, stigning ~1,07 %","ÅDT":"15 000",Ventilasjon:"Ikke krav (kun ett av to kriterier oppfylt)",Sikkerhet:"Havarinisjer hver 500 m, tverrforbindelser hver 250 m"}},
+{pns:"Skreheia",src:"FAG",fag:"tunnel",type:"Krav",chap:"Fagrapport Tunnel",ref:"Kap. 5",title:"Skreheiatunnelen — hoveddata (reg.fase)",desc:"~200–230 m, delområde 1, ca. 200 m fra drikkevannskildene Hagelandstjønna og Moslandsvatnet. Ikke egen arbeidspakke i konkurransegrunnlaget.",info:{Lengde:"Ca. 200–230 m, stigning ~0,135 %",Tunnelklasse:"Ingen (under 500 m) — egne sikkerhetstiltak vurderes ved totalentreprise",Ventilasjon:"Ikke krav"}},
+{pns:"Vann/frost",src:"FAG",fag:"tunnel",type:"Krav",chap:"Fagrapport Tunnel",ref:"Kap. 4–6",title:"Vann- og frostsikring (tunnelklasse E)",desc:"Hovedkonsept iht. N500/R510: hvelv av betongelementer, enten helhvelv eller veggelementer kombinert med brannsikret PE-skum i heng.",info:{Løsning:"Betong-veggelementer opp til ~3,5 m over kjørebane; PE-skum over, brannbeskyttet med 80 mm nettarmert sprøytebetong + PP-fiber",Merk:"Bakgrunnsløsning fra reg.fase — konkurransegrunnlaget angir T9,5 som kontraktskrav (jf. 2.3.2)"}},
+{pns:"Anleggsvann",src:"FAG",fag:"anlegg",type:"Krav",chap:"Fagrapport Tunnel",ref:"Kap. 4–6",title:"Utslipp fra tunneldriving (reg.fase)",desc:"Renseanlegg for driftsvann kreves; ikke kommunalt spillvannsnett, så overskuddsvann føres til resipient. Utslippskrav avklares med Statsforvalteren.",info:{Innhold:"Avløpsvann med boreslam og nitrogen fra sprengstoff",Rensing:"Minimum sandfang med dykket utløp; lukket prosessvannsystem bør vurderes",Eikeråsheia:"Vestfra (Lene) renner på selvfall; østfra (Haugdal) må pumpes ut"}},
+{pns:"Rystelser",src:"FAG",fag:"anlegg",type:"Krav",chap:"Fagrapport Tunnel",ref:"Kap. 4–6",title:"Rystelser, støy og setninger (reg.fase)",desc:"Restriksjoner på sprengning og arbeidstid forventes langs deler av traseen. Hus innenfor ~100 m fra senterlinje bør besiktiges før anleggsstart.",info:{Grenseverdier:"Rystelser iht. NS 8141; støy iht. T-1442",Avklaring:"Arbeidstid for støyende arbeider avklares med lokale myndigheter i anbudsdokumentene",Hydrogeologi:"Hydrogeologisk vurdering og grenseverdier for innlekkasje ved fare for grunnvannssenkning"}},
+
+/* === FAGRAPPORT KONSTRUKSJON (reguleringsfase, bakgrunn) === */
+{pns:"Fagrapport",src:"FAG",fag:"konstr",type:"Krav",chap:"Fagrapport Konstruksjon",ref:"Sammendrag",title:"Konstruksjoner i prosjektet — oversikt",desc:"Reguleringsfasens konstruksjonsrapporter for E39 Mandal–Lyngdal øst, dekker Lindesnes og Lyngdal kommune. Konstruksjoner inne i tunnel inngår ikke.",info:{Dekning:"Lindesnes: delområde 1, 2, 3, 5 og 6 (Mandalselva → vestre portal Eikeråsheia, inkl. tilførselsveier). Lyngdal: delområde 4 (Lene → Herdal/Knuten)",Merk:"Bakgrunnsdata fra reg.fase — kontraktens konstruksjoner er listet under arbeidspakker 2.8.x"}},
+{pns:"Bruer",src:"FAG",fag:"konstr",type:"Krav",chap:"Fagrapport Konstruksjon",ref:"Bru",title:"Brutyper (reg.fase)",desc:"Betongplatebruer, betongkassebruer, fritt-frambygg-bruer og samvirkebruer. Spenn fra korte ettspennsbruer til store hovedbruer.",info:{Hovedbruer:"Mandalselva bru, Audnedalen bru, Optedal bru",Grunnlag:"Eurokoder med nasjonale tillegg og håndbøker fra Statens vegvesen"}},
+{pns:"Kulverter",src:"FAG",fag:"konstr",type:"Krav",chap:"Fagrapport Konstruksjon",ref:"Kulvert",title:"Kulverter (reg.fase)",desc:"Kulverter for lokalvei, skogsbilvei og bekk, i betong og stålrør. Flere dimensjonert for 200-årsflom.",info:{Materialer:"Betong og stålrør",Dimensjonering:"Flere for 200-årsflom; basert på flomvurderinger"}},
+{pns:"Faunapassasjer",src:"FAG",fag:"konstr",type:"Krav",chap:"Fagrapport Konstruksjon",ref:"Fauna",title:"Faunapassasjer (reg.fase)",desc:"Faunapassasjer utført som kulverter og lokk over E39, ofte kombinert med lokalvei eller vilttrekk.",info:{Utforming:"Kulvert eller lokk over E39; kombinasjon med lokalvei/vilttrekk"}},
+{pns:"Portaler",src:"FAG",fag:"konstr",type:"Krav",chap:"Fagrapport Konstruksjon",ref:"Portal",title:"Tunnelportaler (reg.fase)",desc:"Tunnelportaler for T10,5-profil iht. håndbok N500, normalt ca. 16 m lange.",info:{Profil:"T10,5 iht. N500",Lengde:"Normalt ca. 16 m",Merk:"Konkurransegrunnlaget angir T9,5 som kontraktsprofil (jf. 2.3.2)"}},
+{pns:"Støttemurer",src:"FAG",fag:"konstr",type:"Krav",chap:"Fagrapport Konstruksjon",ref:"Mur",title:"Støttemurer (reg.fase)",desc:"Støttemurer der ny og eksisterende E39 ligger tett, blant annet ved Optedal."},
+
+/* === TS-REVISJON TRINN 1 (reguleringsfase, bakgrunn) === */
+{pns:"TS-rev",src:"FAG",fag:"ts",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Trinn 1",title:"TS-revisjon trinn 1 — oversikt",desc:"Trafikksikkerhetsrevisjon trinn 1 delt per kommune. Lyngdal: 2 avvik. Lindesnes: 3 avvik. Alle avvik er fulgt opp i avtaleskjema.",flags:["Avvik lukket"],info:{"Lyngdal":"2 avvik + merknader (16 i revisjonsrapport / 14 i avtaleskjema — sprik bør verifiseres)","Lindesnes":"3 avvik + 25 merknader","Dok-nr":"NV42E39ML-TRS-RAP-0004 (rapport) og -0003 (avtaleskjema)"}},
+{pns:"Avvik 1.1",src:"FAG",fag:"ts",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Lyngdal",title:"Avvik 1.1 — Optedal bru (skulderbredde)",desc:"Vist skulder 2,75 m. Krav: bruer <500 m og ÅDT <25 000 skal ha 2 m skulder. Anbefalt redusert til 2 m.",flags:["Avvik lukket"],info:{Status:"Tatt til følge — skulder på bru redusert til 2 m",Berører:"Optedal bru (2.8.7)"}},
+{pns:"Avvik 1.2",src:"FAG",fag:"ts",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Lyngdal",title:"Avvik 1.2 — Sikkerhetssone / sideterreng",desc:"Fallende terreng brattere enn 1:4 inngår i sikkerhetssone. Skråning 1:2 kommer innenfor sonen; ved rekkverksfri løsning må fylling ligge utenfor sone (evt. jordvoll).",flags:["Avvik lukket"],info:{Status:"Sikkerhetsavstand er 10 m; tegninger endres for å være mindre misvisende",Merk:"Grøftebunn og kummer gjennomgås i byggeplanfase"}},
+{pns:"Avvik 2.1",src:"FAG",fag:"ts",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Lindesnes",title:"Avvik 2.1 — Skreheia tunnel (stoppsikt)",desc:"Tunnel i horisontalkurve R=1500 m på høybrekk. Stoppsikt 227 m; avstand midtre kjørefelt til vegg i T10,5 er 3,5 m, mens påkrevd er ~4,3 m. Tiltak: utvide tunnel for sikt i innerkurver i begge løp.",flags:["Avvik lukket"],info:{Status:"Kontrollert — siktutvidelse i tunnel gir tilstrekkelig frisikt",Profil:"Gjelder T10,5 (reg.fase); kontrakt angir T9,5"}},
+{pns:"Avvik 2.2",src:"FAG",fag:"ts",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Lindesnes",title:"Avvik 2.2 — Akselerasjonsfelt for kort",desc:"Brukt 134 m; krav ~156 m (V0=80, stigning 0, eks. overgangskurver). Tiltak: forlenge akselerasjonsfelt og kontrollere overgangskurver.",flags:["Avvik lukket"],info:{Status:"Akselerasjonsfeltet forlenget og overgangskurver kontrollert"}},
+{pns:"Avvik 2.3",src:"FAG",fag:"ts",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Lindesnes",title:"Avvik 2.3 — Grundelandsvatnet bru (stoppsikt)",desc:"Avstand midtre ytre kjørefelt til rekkverksrom 4,5 m; ved fall 1,53 % er stoppsiktkrav 235 m og krever avstand til sidehinder 5,4 m. Tiltak: utvide skulder.",flags:["Avvik lukket"],info:{Status:"Utvidet skulder lagt inn for å oppnå stoppsikt",Berører:"Grundelandsvatnet bru (2.8.1)"}},
+{pns:"Fravik fall",src:"FAG",fag:"ts",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Kap. 3.2",title:"Fravik — resulterende fall (omlegging/E39)",desc:"Flere punkter med resulterende fall under 2 % over korte strekninger, både i Lyngdal og Lindesnes. Registrert som fravik i TS-revisjonen.",info:{"Lyngdal":"Profil 211 (1,72 %/14 m), 393 (1,50 %/27 m), 1148 (0,52 %/21 m)","Lindesnes E39-11300":"Profil 4580 (1,45 %), 5525/6080/6180 (1,75 %), 6600 (1,75 %), 7440 (0,18 %), 7625 (0,66 %)","Lindesnes E39-12400":"Profil 8325 (1,91 %), 9060 (1,54 %), 12210 (1,42 %), 16340 (1,13 %)"}},
+{pns:"Fravik sideveg",src:"FAG",fag:"vei",type:"Krav",chap:"Fagrapport TS-revisjon",ref:"Kap. 3.2",title:"Fravik — sideveger og GS-veger (Lindesnes)",desc:"Flere fravik på tilførsels-/sideveger og gang-/sykkelveger: stigning over 8 %, små kurveradier, redusert stoppsikt og kort kryssavstand. Flere skyldes tilpasning til eksisterende veg.",info:{Stigning:"Tredal GS 12 %, Grimåsen–Møgland 9,5 %, Lasøl traktorveg 24 %, Kårstøl 9 %, Gjervollstad 9–11 %","Kurvatur":"Sjøllingstad 12 m og 30 m, Møgland 50 m (krav 60 m), Tredal R=20 m","Avstand":"Marnavegen GS <3 m fra hovedveg (rekkverk); Blørstad kryssavstand ~200 m (bør 500 m)",Stoppsikt:"Tredal GS sikret 20 m (krav 40 m ved fall >5 %)"}},
+
+/* === GEOTEKNIKK & INGENIØRGEOLOGI (reguleringsfase/byggegrunnlag, bakgrunn) === */
+{pns:"GTK-restrisiko",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Geoteknikk",ref:"NOT-0001",title:"Geoteknikk — restrisiko/usikkerhet",desc:"Notat som oppsummerer geotekniske usikkerheter vurdert større enn normalt for detaljregulering. Flere punkter krever supplerende grunnundersøkelser.",flags:["Risiko"],info:{"Optedal/Loppeneset skjæring":"Usikker løsmassemektighet; mulig behov for midlertidig/permanent sikring","Lene bruer":"Ingen tilkomst for undersøkelser; forutsatt fundamentert på berg — bergnivå må avdekkes","Mandalselva bru":"Stor mektighet bløte/organiske masser på elvebunn; stabilitets-/massefortrengningsrisiko","Blørstadkrysset fylling":"Myr/tjern; bløte masser opptil 20 m (seismikk); metode-/mengdeusikkerhet","Myr/masseutskifting":"Vannstrømninger må kartlegges for å hindre utvasking av finstoff"}},
+{pns:"GTK-oppfølging",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Geoteknikk",ref:"PLN-0001",title:"Oppfølgingsplan geoteknikk (byggefase)",desc:"Gjelder E39 Blørstad–Lyngdal, delområde 2, 3, 4 og 6. Risikomomenter: kvikkleiresone, usikker brufundamentering, store fyllinger og løsmasseskjæringer.",flags:["Risiko"],info:{"Områdestabilitet Audna":"Moen riggområde: sprøbruddmateriale 28 m dybde (K1, ingen varig personopphold). Bustadmonen/Skofteland anleggsveier: sprøbruddmateriale","Bruer supplerende us.":"Grundelandsvatnet, Audna, Lene bruer og Tredalsbekken bru krever supplerende grunnundersøkelser",Fyllingskrav:"Masser iht. V221; humus >3 % ikke tillatt; terreng brattere enn 1:3 → uttak av såle"}},
+{pns:"GTK-fyllinger",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Geoteknikk",ref:"PLN-0001",title:"Fyllinger med spesielle tiltak (byggefase)",desc:"Flere fyllinger krever masseutskifting eller utgraving av bløte masser før fylling.",info:{Grundelandsvatnet:"Gytje opp til 6,3 m — graves ut/fortrenges, fyllingsfot dokumenteres på stabil grunn",Skoftedalen:"Torv opp til 3,5 m — masseutskiftes",Hogsdalen:"Torv og siltig/gytjig sand opp til 4 m — masseutskiftes",Stilandsknibben:"Torv/bløte masser opp til 8 m — graves ut",Vestbygda:"Torv opp til 8 m — masseutskiftes; eksisterende vei må sikres i anleggsfasen"}},
+{pns:"GEO-oppfølging",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Ing.geologi",ref:"PLN-0001",title:"Oppfølgingsplan ingeniørgeologi (byggefase)",desc:"Delområde 2, 3, 4 og 6. Totalt 3 tunneler og over 10 000 løpemeter høye bergskjæringer.",flags:["Risiko"],info:{Krav:"Kartlegging av sprekkesett/svakhetssoner etter løsmassefjerning; vurdering av syredannende berg",Kategori:"Oppgradering GK2 → GK3 ved forhold som kan gi større utglidninger",Vibrasjoner:"Tilstandsregistrering og grenser iht. NS 8141-1:2022 og NS 8141-4:2021",Kontroll:"Utførelseskontroll fortløpende for å lukke avvik i god tid før overlevering"}},
+{pns:"GEO-skjæringer",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Ing.geologi",ref:"PLN-0001",title:"Spesielt krevende bergskjæringer",desc:"Flere skjæringer med potensial for kile-/planutglidninger og behov for tilpasset helning og god kontursprengning.",info:{"E39-2006V (33 m)":"Kileutglidninger; svakhetssone parallelt gir redusert bergmassekvalitet","E39-2007H (28 m)":"Planutglidning langs foliasjon (glimmer/lav friksjon); mulig tilpasning av helning","E39-2008V (38 m)":"Behov for god kontursprengning; lokal svakhetssone parallelt","E39-20014V (41 m)":"Planutglidninger langs sprekkesett 1 og 2"}},
+{pns:"GEO-lab",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Geoteknikk",ref:"RAP-0016",title:"Geotekniske laboratorieundersøkelser",desc:"Samlerapport for grunnundersøkelser, lab iht. NS 8000-serien og NS-EN ISO 17892-serien. Kvikkleire eksplisitt påvist i enkelte borpunkt.",info:{Standard:"NS 8000-serien, NS-EN ISO 17892-serien; KS iht. Multiconsult (ISO 9000/17025)",Funn:"«KVIKKLEIRE» angitt i borpunkt D101-76 (flere dybdeintervall)"}},
+
+/* === ELEKTRO / FORSYNING (bakgrunn) === */
+{pns:"Forsyning",src:"FAG",fag:"elektro",type:"Krav",chap:"Fagrapport Elektro",ref:"Forsyningssikkerhet",title:"Nettselskapets vurdering av forsyningssikkerhet",desc:"Glitre Nett skal eie og drifte 22 kV-anlegg og nettstasjoner på strekningen. Behov for stabil forsyning for høy oppetid.",info:{Effektbehov:"Stipulert 3 MW for veien + 0,2 MW for energistasjoner/pendlerparkering/lading (foreløpig)",Konflikter:"To hovedlinjer må til jordkabel: Trydalslinja 1 (Blørstadkrysset), Trylandslinja 2 (Lehnebakken)",Forsyning:"Ringforbindelse med fjernstyrte brytere; tunneler >500 m krever 2-sidig forsyning",Byggestrøm:"Høyspent byggestrøm kan kreve anleggskonsesjon og koblingsavtale"}},
+
+/* === GRENSESNITT ØST / HERDALSKRYSSET (bakgrunn) === */
+{pns:"Grensesnitt øst",src:"FAG",fag:"vei",type:"Krav",chap:"Fagrapport Grensesnitt",ref:"VEI-NOT-101",title:"Grensesnitt øst (Herdalskrysset)",desc:"Tiltak/forberedelser i Herdalskrysset for neste parsell i øst, for å unngå nye gravearbeider i ferdig bygget parsell.",info:{Veg:"Nedskilting 90 km/t (Rossåstunnelen) og 70 km/t (dagsone); skilt 504 og 530.01. Bindlag lagt profil 2450–3150 — slitelag/oppmerking senere","Rekkverk":"Ikke satt opp øst for Herdalsbrua; midlertidig betongrekkverk skal fjernes (endterminal monteres)","VA":"OV/DV med sandfang og infiltrasjonsgrøft (2450–2900); OV 1200 BET i rundkjøring (2950); VL 225 PE100 krysser E39 (3735)"}},
+{pns:"Fravik øst",src:"FAG",fag:"elektro",type:"Krav",chap:"Fagrapport Grensesnitt",ref:"VEI-NOT-101",title:"Fravik — skilt/signal i Herdalskrysset",desc:"Plassering av signal og fartsgrenseskilt i rekkverk (ikke bak rekkverk) må trolig fravikssøkes.",flags:["Fravik"],info:{"Stoppblinksignal 304-f":"I midtdeler — må trolig fravikssøkes","Fartsgrenseskilt 309-f og 313-f":"I rekkverk — må trolig fravikssøkes"}},
+
+/* === VANN & AVLØP (bakgrunn) === */
+{pns:"VA Lyngdal",src:"FAG",fag:"miljo",type:"Krav",chap:"Fagrapport VA",ref:"RAP-0001",title:"Vann og avløp (Lyngdal)",desc:"Krav og løsninger for vann/avløp, overvann, drenering og VA i tunnel. Dimensjonert for 200-års returperiode med trygg flomavrenning til definert resipient.",info:{Prinsipp:"Kombinasjon av (1) lukket løsning med sentral rensing og (2) lokal håndtering med sedimentering/fordrøyning i sidearealer; arealer avsatt for fleksibilitet",Tunnel:"Adskilte systemer: rent drens-/innlekkasjevann vs. forurenset vegoverflate-/vaskevann med rensing",Eksisterende:"Ingen kommunale VA-ledninger berøres i Lyngdal; lokale private systemer",Brønner:"13 registrerte (pr. april 2021), 5 nedstrøms ny E39 (1 løsmasse + 4 fjell)"}},
+
+/* === ELEKTRO fagrapport (bakgrunn) === */
+{pns:"ELE Lyngdal",src:"FAG",fag:"elektro",type:"Krav",chap:"Fagrapport Elektro",ref:"RAP-0001",title:"Elektro (Lyngdal, delområde 4)",desc:"Konflikter med eksisterende høyspent/lavspent/tele som krysser/berører traséen. Store omlegginger, særlig av høyspent luftstrekk.",flags:["Risiko"],info:{Konsesjon:"Endringer i regionalnett krever konsesjonsbehandling — behandlingstid kan bli vesentlig lengre enn normalt",Tunnel:"Effektkrevende; høyspent frem til tunnel og redundant/tosidig forsyning. Tekniske bygg iht. N500. UPS for styring/telefoni/rømningslys (utrykningstid +1 t), egen UPS nødnett (8 t + utrykningstid); nødstrøm til brannskap ~hver 125 m",Dagsone:"Gjennomgående høyspentkabel, nye nettstasjoner/fordelingsskap; 160 mm trekkerør ved kryssing under E39 + reserve"}},
+{pns:"ELE Lindesnes",src:"FAG",fag:"elektro",type:"Krav",chap:"Fagrapport Elektro",ref:"RAP-0002",title:"Elektro (Lindesnes)",desc:"Samme hovedbilde som Lyngdal: konflikter mot eksisterende nett, omlegginger og forsyning til nye installasjoner. Samletabell med konfliktpunkter per profil.",info:{Fiber:"Gjennomgående 144 stamfiber langs ny E39",Kryssing:"Luftstrekk som krysser E39 legges som jordkabel under kjørebane, støpt rørkryss + 1 stk. 160 mm trekkerør i reserve",Tele:"Tele/lavspent til boliger kan ofte erstattes med kabel eller frakobles ved riving"}},
+
+/* === VEI fagrapport (bakgrunn) === */
+{pns:"VEI Lindesnes",src:"FAG",fag:"vei",type:"Krav",chap:"Fagrapport Vei",ref:"RAP-0002",title:"Vei (Lindesnes) — overordnet",desc:"Ny E39 Mandal–Lyngdal øst ~25,1 km (Mandalselva–Herdal), firefelts motorvei 110 km/t. To planskilte kryss: Blørstad (Tredal) og Banken/Østre Stiland (Udland).",info:{Profil:"Dimensjoneringsklasse H3 (23 m totalbredde); tunnel 2 × T10,5 (reg.fase)","ÅDT 2046":"15 000 / 14 000, 20 % tunge kjøretøy (jf. tabell)",Kryss:"Tilrettelagt for kollektivknutepunkt med busslommer/venteskur og gangforbindelser"}},
+
+/* === ANLEGGSGJENNOMFØRING (bakgrunn) === */
+{pns:"Anlegg Lyngdal",src:"FAG",fag:"anlegg",type:"Krav",chap:"Fagrapport Anleggsgj.",ref:"RAP-0003",title:"Anleggsgjennomføring (Lyngdal) — masser",desc:"Delstrekning ~4,8 km, hvorav ~2,2 km i Eikeråsheiatunnelen (tunnelens totale ~3 km, resterende ~800 m i Lindesnes). Mål om lokal massetransport, unngå offentlig veinett.",info:{"Hovedmasser Lene–Herdal":"Jordskjæring/vegdekke 145 000 pfm³ · bergskjæring 255 000 pfm³ · tunnel 270 000 pfm³ · fylling 390 000 pam³ · masseutskifting 95 000 pam³",Masselager:"BAA1 (Flaten NØ) 193 000 m³, BAA2 (Flaten SV) 245 000 m³ — sprengstein/jord/myr",Utfordringer:"Eikeråsheiatunnelen, 2 bruer (bekk v/Lene, elv v/Optedal), viltkryssing, omlegging E39 v/Optedal m/kulvert, mur mellom eks. og ny E39",Trafikk:"Anleggstrafikk hovedsakelig i ny trasé; faseplaner v/Herdal minimerer trafikk på eks. E39"}},
+{pns:"Anlegg Lindesnes",src:"FAG",fag:"anlegg",type:"Krav",chap:"Fagrapport Anleggsgj.",ref:"RAP-0004",title:"Anleggsgjennomføring (Lindesnes)",desc:"Midlertidige anleggsområder kan etableres med hensyn til kulturminner/naturmangfold/sårbare vassdrag. Tilbakeføres innen ett år etter at veianlegget er satt i drift.",info:{Anleggsbelte:"Ca. 50 m fra arealer planlagt til annen veggrunn",Drikkevann:"Veilinja krysser nedslagsfelt for flere reserve-/supplerende drikkevannskilder; sikringssoner H110 krever godkjent tiltaksplan før tiltak. Tette grøfter/lukket ledning ut av sikringssoner; ingen masselagring i sikringssoner",Masseflytting:"Hovedsakelig øst→vest for massebalanse, unntatt tunnelmasser ut av drikkevanns-nedslagsfelt"}},
+
+/* === SKRED & INGENIØRGEOLOGI (bakgrunn) === */
+{pns:"Skred Farmoveien",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Skred",ref:"GEO-RAP-0007",title:"Skredfarevurdering (Farmoveien, Lindesnes)",desc:"Område vest for fv. 4054 Farmoveien i aktsomhetsområde for snøskred og jord-/flomskred. Vurdert i sikkerhetsklasse S3 (opphold >25 personer).",flags:["Risiko"],info:{Vurdering:"Kun reell fare for steinsprang inn i området; årlig nominell sannsynlighet >1/5000 men <1/1000",Tiltak:"Brakkeboliger (>25 pers.) plasseres utenfor faresone; voll av masser mot skråning hindrer steinsprang"}},
+{pns:"Eikeråsheia geo",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Ing.geologi",ref:"GEO-RAP-0003",title:"Ingeniørgeologi — Eikeråsheiatunnelen",desc:"~3000 m, doble løp T10,5, planlagt i hornblendegranitt med antatt god bergmassekvalitet på tunnelnivå. Minst 16 mulige svakhetssoner identifisert.",flags:["Risiko"],info:{Svakhetssoner:"Min. 16 mulige; noen ugunstig orientert (nær parallelt med tunnelen) — kan gi stabilitetsutfordringer over lengre strekninger",Overdekning:"Over 100 m på mesteparten (maks ~185 m), laveste ~16 m under Grummedal",Påhugg:"Øst v/Haugdal krevende (nær vertikal skrent) — omfattende rensk/sikring før start",Injeksjon:"Strekningsvise innlekkasjekrav; behovsprøvd forinjeksjon mulig langs hele lengden — omfang vanskelig å prognosere"}},
+{pns:"Skjæringer Lindesnes",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Ing.geologi",ref:"GEO-RAP-0002",title:"Bergskjæringer (Lindesnes)",desc:"I overkant av 11 000 lm bergskjæringer over 10 m, stedvis opp til ~40 m. Normalt sikringsbehov med rensk, bolter og steinsprangnett.",flags:["Risiko"],info:{Geometri:"Maks pallhøyde anbefales 15 m; hylle 4 m ved høyder over 30 m",Snøskred:"Sikring anbefales i to områder: Fagerlifjellan (Hovsdøl) og over østre påhugg Eikeråsheia (Haugdal)",Syredannende:"Generelt liten sannsynlighet; potensielle problembergarter i båndgneis mellom Ommundsvannet og Hovstøl"}},
+
+/* === YTRE MILJØ (bakgrunn) === */
+{pns:"Vannmiljø",src:"FAG",fag:"miljo",type:"Krav",chap:"Fagrapport Ytre miljø",ref:"YML-RAP-0006",title:"Vannmiljø — forundersøkelser",desc:"Før-kartlegging av biologi og vannkjemi 2020–2021. Lenefjorden er hovedresipient med generelt dårlig til svært dårlig økologisk tilstand.",info:{Tilstand:"Ungfisktetthet utslagsgivende (lav i alle bekker); bunndyr/begroingsalger indikerer god–svært god tilstand mht. organisk belastning",Kjemi:"Sterkt påvirket av forsuring (høyt labilt aluminium); tungmetaller (Zn i bekk; As/Hg/Zn i Lenefjorden) — moderat påvirkning"}},
+{pns:"Drikkevann",src:"FAG",fag:"miljo",type:"Krav",chap:"Fagrapport Ytre miljø",ref:"YML-RAP-0007",title:"Tiltaksplan privat drikkevann (Lyngdal)",desc:"«Levende» dokument om privat drikkevannsforsyning som kan påvirkes av utbygging/avrenning. Overflatevann mest sårbart; brønner nedstrøms vei utsatt for salt (klorid/natrium).",flags:["Risiko"],info:{"Lene (5 brønner)":"Svært utsatt og vanskelig å erstatte — anleggsgjennomføring bør i minst mulig grad påvirke områdene ved Lene","Haddelandsveien 76":"Svært utsatt — må vurderes for eventuell erstatning",Oppsummering:"Ingen brønner «med sikkerhet» må erstattes; markerte brønner brukes ikke som drikkevann i anleggsperioden; overvåkes før/under/etter",Beredskap:"Krav om beredskapsplan med varslingsrutiner og plan for å supplere/erstatte vann"}},
+{pns:"Forurenset grunn",src:"FAG",fag:"miljo",type:"Krav",chap:"Fagrapport Ytre miljø",ref:"YML-RAP-0009",title:"Risikovurdering forurenset grunn",desc:"Ingen store forurensningskilder avdekket. Mindre områder med maskin-/utstyrslagring og avdekket dumping ved Blørstad; villfyllinger kan ikke utelukkes.",info:{Undersøkelser:"Anbefalt ved dagens E39 v/Lenefjorden (veinær forurensning) og i jordbruksområder (plantevernmiddel)",Sulfidberg:"Rutiner for mulig sulfidholdig berg (båndgneis) i anleggsfase: kartlegging etter rensk, prøvetaking ved mistanke",Forslag:"Hele planområdet kan håndteres som tiltaksområde for lokal omdisponering av lettere forurensede masser; tiltaksplan kreves før oppstart ved påvist forurensning"}},
+{pns:"Grunnvann",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Ytre miljø",ref:"YML-RAP-0030",title:"Grunnvannsovervåkning (mai 2022–mai 2023)",desc:"Tre overvåkningsbrønner (én per tunnel) installert mai 2021. Tilnærmet lik grunnvannstand og temperatur over måleperiodene — naturlige årstidsvariasjoner.",info:{Brønner:"B1 Grummedal (Eikeråsheia), B3 Vrå (Vråheia), B4 Hageland (Skreheia)","Grunnvannstand (snitt)":"B1 0,55 m · B3 3,92 m · B4 10,62 m under terreng",Temperatur:"B1 8,01–8,12 °C · B3 6,98–7,07 °C · B4 7,26–7,37 °C"}},
+{pns:"Grunnundersøkelser",src:"FAG",fag:"grunn",type:"Krav",chap:"Fagrapport Geoteknikk",ref:"GEO-RAP-0008/09/10",title:"Datarapporter grunnundersøkelser (delområder)",desc:"Datarapporter for grunnundersøkelser per delområde. Delområde 1 (RAP-0009) kunne ikke hentes ut i kildesammendraget; øvrige er opplastet uten konkrete tekstutdrag her.",flags:["Ufullstendig"],info:{Merk:"Innhold ikke trukket ut i kildesammendraget — selve datarapportene må konsulteres direkte for borpunktdata"}},
 
 /* === D1.1 — Opsjoner === */
 {pns:"Opsjon",fag:"opsjon",type:"Arbeidspakke",chap:"D1.1",ref:"2.11.1",title:"Innovasjonsprosjekt arealbruksendringer",desc:"Gjennomføre prosjektet valgt i forprosjektrapport (2.4.11). Mulig å søke offentlig finansiering/tilskudd.",flags:["Kostnadsramme","Frist"],kr:"NOK 5 mill.",info:{"Kostnadsramme":"Maks NOK 5 000 000 eks. mva.",Frist:"Utløsning innen 01.10.2027",Merk:"Ekstern tilleggsfinansiering inngår ikke i kostnadsrammen."}},
@@ -390,6 +522,91 @@ const DATA = [
 {pns:"2.4.17",fag:"elektro",type:"Krav",chap:"D1.2",ref:"2.4.17",title:"Sikkerhet i automasjonsanlegg",desc:"Bestemmelse ettersendes.",flags:["Ettersendes"]},
 ];
 
+/* ---------- DOKUMENTREGISTER ---------- */
+// status: 'done' = bearbeidet i appen, 'iden' = kjent men ikke hentet inn, 'miss' = mangler/ufullstendig
+const REGISTER = [
+  {grp:"Tunnel", farge:"#5a3e85", docs:[
+    {navn:"Fagrapport Tunnel (Vråheia, Skreheia, Eikeråsheia)",num:"NV42E39ML-TNL-RAP-0002",status:"done"},
+    {navn:"Ingeniørgeologi — Eikeråsheiatunnelen (Lyngdal)",num:"NV42E39ML-GEO-RAP-0003",status:"done"},
+  ]},
+  {grp:"Konstruksjoner", farge:"#9c4221", docs:[
+    {navn:"Fagrapport Konstruksjon — Lyngdal",num:"E39_ML_Lyngdal_Konstruksjon",status:"done"},
+    {navn:"Fagrapport Konstruksjon — Lindesnes",num:"E39_ML_Lindesnes_Konstruksjon",status:"done"},
+  ]},
+  {grp:"Geoteknikk & ingeniørgeologi", farge:"#946b2d", docs:[
+    {navn:"Geoteknikk — restrisiko/usikkerhet",num:"NV42E39ML-GTK-NOT-0001",status:"done"},
+    {navn:"Oppfølgingsplan geoteknikk (byggefase)",num:"NV42E39ML-GTK-PLN-0001",status:"done"},
+    {navn:"Oppfølgingsplan ingeniørgeologi (byggefase)",num:"NV42E39ML-GEO-PLN-0001",status:"done"},
+    {navn:"Geotekniske laboratorieundersøkelser",num:"NV42E39ML-GEO-RAP-0016",status:"done"},
+    {navn:"Bergskjæringer (Lindesnes)",num:"NV42E39ML-GEO-RAP-0002",status:"done"},
+    {navn:"Skredfarevurdering (Farmoveien)",num:"NV42E39ML-GEO-RAP-0007",status:"done"},
+    {navn:"Datarapport grunnundersøkelser — samlet",num:"NV42E39ML-GEO-RAP-0008",status:"iden"},
+    {navn:"Datarapport grunnundersøkelser — delområde 1",num:"NV42E39ML-GEO-RAP-0009",status:"miss"},
+    {navn:"Datarapport grunnundersøkelser — delområde 2",num:"NV42E39ML-GEO-RAP-0010",status:"iden"},
+    {navn:"Datarapporter grunnundersøkelser — delområde 3–6",num:"NV42E39ML-GEO-RAP (3–6)",status:"iden"},
+    {navn:"Supplerende boringer / laboratorieundersøkelser",num:"—",status:"iden"},
+  ]},
+  {grp:"Vei & trafikksikkerhet", farge:"#2b6cb0", docs:[
+    {navn:"Fagrapport Vei — Lindesnes",num:"NV42E39ML-VEI-RAP-0002",status:"done"},
+    {navn:"TS-revisjon trinn 1",num:"NV42E39ML-TRS-RAP-0004",status:"done"},
+    {navn:"Avtaleskjema — oppfølging av TS-revisjon",num:"NV42E39ML-TRS-RAP-0003",status:"done"},
+    {navn:"Grensesnitt øst (Herdalskrysset)",num:"NV42E39LL-VEI-NOT-101",status:"done"},
+  ]},
+  {grp:"Anleggsgjennomføring", farge:"#7a8450", docs:[
+    {navn:"Anleggsgjennomføring — Lyngdal",num:"NV42E39ML-VEI-RAP-0003",status:"done"},
+    {navn:"Anleggsgjennomføring — Lindesnes",num:"NV42E39ML-VEI-RAP-0004",status:"done"},
+  ]},
+  {grp:"Elektro", farge:"#0a7ea0", docs:[
+    {navn:"Fagrapport Elektro — Lyngdal",num:"NV42E39ML-ELE-RAP-0001",status:"done"},
+    {navn:"Fagrapport Elektro — Lindesnes",num:"NV42E39ML-ELE-RAP-0002",status:"done"},
+    {navn:"Nettselskapets vurdering av forsyningssikkerhet",num:"—",status:"done"},
+  ]},
+  {grp:"VA & ytre miljø", farge:"#4f9d3a", docs:[
+    {navn:"Fagrapport VA — Lyngdal",num:"NV42E39ML-VAA-RAP-0001",status:"done"},
+    {navn:"Vannmiljø — forundersøkelser",num:"NV42E39ML-YML-RAP-0006",status:"done"},
+    {navn:"Tiltaksplan privat drikkevann (Lyngdal)",num:"NV42E39ML-YML-RAP-0007",status:"done"},
+    {navn:"Risikovurdering forurenset grunn",num:"NV42E39ML-YML-RAP-0009",status:"done"},
+    {navn:"Grunnvannsovervåkning 2022–2023",num:"NV42E39ML-YML-RAP-0030",status:"done"},
+  ]},
+  {grp:"SHA", farge:"#c0392b", docs:[
+    {navn:"SHA-rapport — Lyngdal (per delområde)",num:"—",status:"iden"},
+    {navn:"SHA-rapport — Lindesnes (per delområde)",num:"—",status:"iden"},
+  ]},
+  {grp:"ROS", farge:"#b8841f", docs:[
+    {navn:"ROS-analyse — Lyngdal (per delområde)",num:"—",status:"iden"},
+    {navn:"ROS-analyse — Lindesnes (per delområde)",num:"—",status:"iden"},
+  ]},
+  {grp:"Plan & medvirkning", farge:"#4a5568", docs:[
+    {navn:"Høringsuttalelser — oppstart / utvidet planområde",num:"—",status:"iden"},
+    {navn:"Tegningspakke — 2. gangs behandling",num:"—",status:"iden"},
+    {navn:"Optimaliseringsnotat",num:"—",status:"iden"},
+  ]},
+];
+
+const STATUS_LABEL={done:"Bearbeidet",iden:"Identifisert",miss:"Mangler"};
+
+function renderRegister(){
+  const all=REGISTER.flatMap(g=>g.docs);
+  const done=all.filter(d=>d.status==='done').length;
+  const iden=all.filter(d=>d.status==='iden').length;
+  const miss=all.filter(d=>d.status==='miss').length;
+  document.getElementById('regStats').innerHTML=`
+    <div class="reg-stat"><div class="n">${all.length}</div><div class="l">dokumenter i registeret</div></div>
+    <div class="reg-stat"><div class="n" style="color:var(--teal-deep)">${done}</div><div class="l">bearbeidet inn i verktøyet</div></div>
+    <div class="reg-stat"><div class="n" style="color:var(--gold)">${iden}</div><div class="l">identifisert, ikke hentet inn</div></div>
+    <div class="reg-stat"><div class="n" style="color:var(--coral)">${miss}</div><div class="l">mangler / ufullstendig</div></div>`;
+  document.getElementById('regBody').innerHTML=REGISTER.map(g=>`
+    <div class="reg-group">
+      <h3><span class="bar" style="background:${g.farge}"></span>${g.grp}
+        <span style="font-family:'JetBrains Mono';font-size:12px;color:var(--muted);font-weight:400">${g.docs.length}</span></h3>
+      <table class="reg-table"><thead><tr><th>Dokument</th><th>Status</th></tr></thead>
+      <tbody>${g.docs.map(d=>`<tr>
+        <td><span class="reg-doc">${d.navn}</span><span class="reg-num">${d.num}</span></td>
+        <td><span class="reg-status ${d.status}"><span class="pip ${d.status}"></span>${STATUS_LABEL[d.status]}</span></td>
+      </tr>`).join('')}</tbody></table>
+    </div>`).join('');
+}
+
 /* ---------- STATE ---------- */
 let state={q:"",fag:"all",type:"all",chap:"all",src:"all"};
 
@@ -431,6 +648,7 @@ function matches(d){
 function flagClass(f){
   if(/frist/i.test(f)) return 'frist';
   if(/kostnad|kr/i.test(f)) return 'kr';
+  if(/lukket/i.test(f)) return 'frist';
   return 'flag';
 }
 
