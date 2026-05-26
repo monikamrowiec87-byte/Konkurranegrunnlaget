@@ -1,1 +1,1 @@
-# konkurranegrunnlaget
+# konkurransegrunnlaget
